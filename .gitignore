@@ -1,9 +1,9 @@
 .DS_Store
 .idea
 .ipynb_checkpoints/
-python/__pycache__/
-src/verse-library.so
-src/verse
-src/verse-neigh
-src/verse-simrank
-karate.embs
+verse/python/__pycache__/
+verse/src/verse-library.so
+verse/src/verse
+verse/src/verse-neigh
+verse/src/verse-simrank
+verse/karate.embs
