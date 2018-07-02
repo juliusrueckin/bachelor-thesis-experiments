@@ -1,0 +1,9 @@
+.DS_Store
+.idea
+.ipynb_checkpoints/
+python/__pycache__/
+src/verse-library.so
+src/verse
+src/verse-neigh
+src/verse-simrank
+karate.embs
