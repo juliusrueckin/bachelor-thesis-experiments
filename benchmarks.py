@@ -151,7 +151,7 @@ class Clustering:
 
 		self.start_time = time.time()
 
-		self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1)
+		self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1, n_init=1)
 		self.k_means.fit(self.embeddings)
 
 		self.end_time = time.time()
