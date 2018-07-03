@@ -1,9 +1,11 @@
-import numpy as np
-import pandas as pd
 import time
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics.cluster import normalized_mutual_info_score
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 class MultiClassClassification:
@@ -16,8 +18,6 @@ class MultiClassClassification:
 	dataset_name = 'Test-Data'
 	performance_function = 'Macro-F1'
 	train_size = 0.3
-	logistic_regression_model = None
-	node_label_predictions = []
 
 	# performance evaluation methods
 	MACRO_F1 = 'macro_f1'
@@ -34,8 +34,13 @@ class MultiClassClassification:
 	embeddings_test = []
 	node_labels_test = []
 
-	# initialize classification algorithm with customized configuration parameters and produce random train-test split
-	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='Macro-F1',
+	# model and its prediction
+	logistic_regression_model = None
+	node_label_predictions = []
+
+	# initialize classification algorithm with customized configuration parameters
+	# produce random train-test split
+	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
 				 train_size=0.3, embeddings=None, node_labels=None):
 		print('Initialize multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
 			.format(method_name, dataset_name, performance_function, train_size*100.00))
@@ -58,7 +63,7 @@ class MultiClassClassification:
 		self.start_time = time.time()
 
 		self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., multi_class='multinomial', solver='saga',
-													   verbose=1, class_weight='balanced')
+															verbose=1, class_weight='balanced')
 		self.logistic_regression_model.fit(self.embeddings_train, self.node_labels_train)
 
 		self.end_time = time.time()
@@ -97,5 +102,94 @@ class MultiClassClassification:
 			results['macro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='macro')
 		elif self.performance_function == self.MICRO_F1:
 			results['micro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='micro')
+
+		return results
+
+
+class Clustering:
+
+	start_time = None
+	end_time = None
+
+	# algorithm configurations
+	method_name = 'Verse-PPR'
+	dataset_name = 'Test-Data'
+	performance_function = 'nmi'
+	logistic_regression_model = None
+	node_label_predictions = []
+	n_clusters = 2
+
+	# performance evaluation methods
+	NMI = 'nmi'
+	SILHOUETTE = 'silhouette'
+	BOTH = 'both'
+
+	# feature and label space
+	embeddings = []
+	node_labels = []
+
+	# model and its prediction
+	k_means = None
+	node_label_predictions = []
+
+	# initialize classification algorithm with customized configuration parameters
+	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
+				 embeddings=None, node_labels=None, n_clusters=2):
+		print('Initialize clustering experiment with {} on {} evaluated through {}!'
+				.format(self.method_name, self.dataset_name, self.performance_function))
+
+		self.method_name = method_name
+		self.dataset_name = dataset_name
+		self.performance_function = performance_function
+		self.embeddings = embeddings
+		self.node_labels = node_labels
+		self.n_clusters = n_clusters
+
+	def train(self):
+		print('Train clustering experiment with {} on {} evaluated through {}!'
+			  .format(self.method_name, self.dataset_name, self.performance_function))
+
+		self.start_time = time.time()
+
+		self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1)
+		self.k_means.fit(self.embeddings)
+
+		self.end_time = time.time()
+
+		total_train_time = round(self.end_time - self.start_time, 2)
+		print('Trained clustering experiment in {} sec.!'.format(total_train_time))
+
+		return self.k_means
+
+	def predict(self):
+		print('Predict clustering experiment with {} on {} evaluated through {}!'
+			  .format(self.method_name, self.dataset_name, self.performance_function))
+
+		self.start_time = time.time()
+
+		self.node_label_predictions = self.k_means.predict(self.embeddings)
+
+		self.end_time = time.time()
+
+		total_prediction_time = round(self.end_time - self.start_time, 2)
+		print('Predicted clustering experiment in {} sec.!'.format(total_prediction_time))
+
+		return self.node_label_predictions
+
+	def evaluate(self):
+		print('Evaluate clustering experiment with {} on {} evaluated through {}!'
+				.format(self.method_name, self.dataset_name, self.performance_function))
+
+		results = {}
+
+		if self.performance_function == self.BOTH:
+			results['nmi'] = normalized_mutual_info_score(self.node_labels, self.node_label_predictions)
+			results['silhouette'] = silhouette_score(self.embeddings, self.node_label_predictions,
+													 metric='cosine')
+		elif self.performance_function == self.NMI:
+			results['nmi'] = normalized_mutual_info_score(self.node_labels, self.node_label_predictions)
+		elif self.performance_function == self.SILHOUETTE:
+			results['silhouette'] = silhouette_score(self.embeddings, self.node_label_predictions,
+													 metric='cosine')
 
 		return results
