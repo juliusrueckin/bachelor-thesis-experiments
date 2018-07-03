@@ -1,6 +1,8 @@
 .DS_Store
 .idea
 .ipynb_checkpoints/
+__pycache__/
+
 verse/python/__pycache__/
 verse/src/verse-library.so
 verse/src/verse
