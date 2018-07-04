@@ -110,7 +110,7 @@ class VERSE:
         if n_threads < 0:
             n_threads = multiprocessing.cpu_count() + 1 + n_threads
         if n_threads == 0:
-            raise RuntimeError('Number of threds can not be zero!')
+            raise RuntimeError('Number of threads can not be zero!')
         self.C.verse_neigh_train(w, graph.indptr, graph.indices, nv, ne,
                                  n_hidden, steps, n_neg_samples, lr,
                                  rng_seed, n_threads)
