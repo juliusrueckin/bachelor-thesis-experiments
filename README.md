@@ -18,3 +18,9 @@ cd deepwalk-c/src && make;
 cd node2vec-c/ && make;
 ./node2vec -input ../verse/data/karate.bcsr -output karate.bin -dim 128 -threads 4
 ```
+#### LINE
+Download latest GNU GSL Package [here](http://www.singleboersen.com/mirror/gnu/gsl/) and extract it on your local machine. Then do
+```shell
+cd /gslu-extracted-path && ./configure && make && make install
+./line -train network_file -output embedding_file -binary 1 -size 200 -order 2 -negative 5 -samples 100 -rho 0.025 -threads 20
+```
