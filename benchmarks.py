@@ -24,6 +24,7 @@ class LinkPrediction:
 	performance_function = 'Macro-F1'
 	train_size = 0.5
 	vector_operator = 'hadamard'
+	neg_edge_sampling = False
 
 	# performance evaluation methods
 	MACRO_F1 = 'macro_f1'
@@ -41,6 +42,7 @@ class LinkPrediction:
 	node_embeddings = []
 	edge_embeddings = np.empty(shape=(0, 128))
 	new_edges = []
+	neg_edges = []
 	edge_labels = []
 
 	# train-test split of new edges feature space
@@ -55,8 +57,8 @@ class LinkPrediction:
 
 	# initialize link prediction algorithm with customized configuration parameters
 	# compute edgewise features
-	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-				 node_embeddings=None, new_edges=None, vector_operator='hadamard'):
+	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', neg_edges=None,
+				 node_embeddings=None, new_edges=None, vector_operator='hadamard', neg_edge_sampling=False):
 		print('Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'
 			  .format(method_name, dataset_name, performance_function, self.train_size * 100.00))
 
@@ -66,10 +68,15 @@ class LinkPrediction:
 		self.node_embeddings = node_embeddings
 		self.new_edges = new_edges
 		self.vector_operator = vector_operator
+		self.neg_edge_sampling = neg_edge_sampling
+		self.neg_edges = neg_edges
 
 		print('Compute edgewise features based on {} operator!'.format(self.vector_operator))
 		self.compute_edgewise_features(self.new_edges, 1)
-		self.compute_edgewise_features(self.sample_non_existing_edges(len(self.new_edges)), 0)
+		if self.neg_edge_sampling:
+			self.compute_edgewise_features(self.sample_non_existing_edges(len(self.new_edges)), 0)
+		else:
+			self.compute_edgewise_features(self.neg_edges, 0)
 
 		self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test = \
 			train_test_split(self.edge_embeddings, self.edge_labels, train_size=self.train_size, shuffle=True)
