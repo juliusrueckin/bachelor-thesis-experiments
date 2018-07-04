@@ -9,3 +9,4 @@ verse/src/verse
 verse/src/verse-neigh
 verse/src/verse-simrank
 verse/karate.embs
+deepwalk-c/src/karate.bin
