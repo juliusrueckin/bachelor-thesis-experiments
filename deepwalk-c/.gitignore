@@ -1,0 +1,15 @@
+# ignore target binary
+deepwalk
+!deepwalk/
+
+# ignore obeject files
+*.o
+
+# ignore python binaries and eggs
+*.pyc
+__pycache__/
+*.egg-info/
+
+# ignore swap files, graph files and other data files
+*.swp
+*.xgfs
