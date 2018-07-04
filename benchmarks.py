@@ -431,7 +431,7 @@ class Clustering:
 	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
 				 embeddings=None, node_labels=None, n_clusters=2):
 		print('Initialize clustering experiment with {} on {} evaluated through {}!'
-				.format(self.method_name, self.dataset_name, self.performance_function))
+				.format(method_name, dataset_name, performance_function))
 
 		self.method_name = method_name
 		self.dataset_name = dataset_name
