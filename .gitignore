@@ -12,3 +12,4 @@ verse/karate.embs
 deepwalk-c/src/karate.bin
 node2vec-c/node2vec
 node2vec-c/node2vec.o
+node2vec-c/karate.bin
