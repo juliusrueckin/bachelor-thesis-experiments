@@ -20,3 +20,6 @@ LINE/linux/concatenate
 LINE/linux/gsl/
 LINE/linux/normalize
 LINE/linux/reconstruct
+
+metapath2vec/distance
+metapath2vec/metapath2vec
