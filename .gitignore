@@ -10,3 +10,5 @@ verse/src/verse-neigh
 verse/src/verse-simrank
 verse/karate.embs
 deepwalk-c/src/karate.bin
+node2vec-c/node2vec
+node2vec-c/node2vec.o
