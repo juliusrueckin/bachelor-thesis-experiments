@@ -37,18 +37,24 @@ class LinkPrediction:
 	WEIGHTED_L1 = 'weighted_l1'
 	WEIGHTED_L2 = 'weighted_l2'
 
-	# node and edge embedding feature space, and new edges list
+	# node and edge embedding feature space, new edges list and edge labels
 	node_embeddings = []
 	edge_embeddings = np.empty(shape=(0, 128))
 	new_edges = []
+	edge_labels = []
 
 	# train-test split of new edges feature space
 	edge_embeddings_train = []
+	edge_labels_train = []
 	edge_embeddings_test = []
+	edge_labels_test = []
 
-	# initialize classification algorithm with customized configuration parameters
-	# compute new edge feature space
-	# randomly split new edges feature space in one half train and test set
+	# model and its prediction
+	logistic_regression_model = None
+	edge_label_predictions = []
+
+	# initialize link prediction algorithm with customized configuration parameters
+	# compute edgewise features
 	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
 				 node_embeddings=None, new_edges=None, vector_operator='hadamard'):
 		print('Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'
@@ -61,28 +67,21 @@ class LinkPrediction:
 		self.new_edges = new_edges
 		self.vector_operator = vector_operator
 
-		print('Compute edgewise features of new edges')
-		self.compute_new_edges_feature_space()
+		print('Compute edgewise features based on {} operator!'.format(self.vector_operator))
+		self.compute_edgewise_features(self.new_edges, 1)
+		self.compute_edgewise_features(self.sample_non_existing_edges(len(self.new_edges)), 0)
 
-		print('Make train-test split of new edges')
-		self.new_edges_train_test_split()
-
-	# randomly split edge_embeddings 50/50 in train and test feature space
-	def new_edges_train_test_split(self):
-		np.random.shuffle(self.edge_embeddings)
-		split_index = np.floor(np.shape(self.edge_embeddings)[0] * self.train_size).astype(int)
-
-		self.edge_embeddings_train = self.edge_embeddings[:split_index, :]
-		self.edge_embeddings_test = self.edge_embeddings[split_index:, :]
+		self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test = \
+			train_test_split(self.edge_embeddings, self.edge_labels, train_size=self.train_size, shuffle=True)
 
 	# compute new edge feature space based on configured vector operator
-	def compute_new_edges_feature_space(self):
-		for edge in self.new_edges:
+	def compute_edgewise_features(self, edges, label):
+		for edge in edges:
 			n1 = np.array(self.node_embeddings[edge[0]])
 			n2 = np.array(self.node_embeddings[edge[1]])
 
 			if self.vector_operator == self.AVERAGE:
-				self.edge_embeddings= np.concatenate((self.edge_embeddings, [self.average_op(n1, n2)]), axis=0)
+				self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.average_op(n1, n2)]), axis=0)
 			elif self.vector_operator == self.CONCAT:
 				self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.concat_op(n1, n2)]), axis=0)
 			elif self.vector_operator == self.HADAMARD:
@@ -91,6 +90,8 @@ class LinkPrediction:
 				self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.weighted_l1_op(n1, n2)]), axis=0)
 			elif self.vector_operator == self.WEIGHTED_L2:
 				self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.weighted_l2_op(n1, n2)]), axis=0)
+
+			self.edge_labels.append(label)
 
 	# implement all vector operators used in VERSE experiments for calculating edgewise embeddings
 	@staticmethod
@@ -113,22 +114,32 @@ class LinkPrediction:
 	def weighted_l2_op(n1, n2):
 		return np.square(n1 - n2)
 
+	def sample_non_existing_edges(self, num_of_sampled_edges):
+		non_existing_edges = []
+		num_of_nodes = np.shape(self.node_embeddings)[0]
+
+		for i in range(num_of_sampled_edges):
+			n1 = np.random.randint(num_of_nodes)
+			n2 = np.random.randint(num_of_nodes)
+			non_existing_edges.append([n1, n2])
+
+		return non_existing_edges
+
 	# train through logistic regression
 	def train(self):
-		print('Train multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
+		print('Train link prediction experiment with {} on {} evaluated through {} on {}% train data!'
 			  .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
 		self.start_time = time.time()
 
-		self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., multi_class='multinomial',
-															solver='saga',
+		self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., solver='saga', multi_class='ovr',
 															verbose=1, class_weight='balanced')
-		self.logistic_regression_model.fit(self.embeddings_train, self.node_labels_train)
+		self.logistic_regression_model.fit(self.edge_embeddings_train, self.edge_labels_train)
 
 		self.end_time = time.time()
 
 		total_train_time = round(self.end_time - self.start_time, 2)
-		print('Trained multi-class classification experiment in {} sec.!'.format(total_train_time))
+		print('Trained link prediction experiment in {} sec.!'.format(total_train_time))
 
 		return self.logistic_regression_model
 
@@ -139,29 +150,29 @@ class LinkPrediction:
 
 		self.start_time = time.time()
 
-		self.node_label_predictions = self.logistic_regression_model.predict(self.embeddings_test)
+		self.edge_label_predictions = self.logistic_regression_model.predict(self.edge_embeddings_test)
 
 		self.end_time = time.time()
 
 		total_prediction_time = round(self.end_time - self.start_time, 2)
-		print('Predicted multi-class classification experiment in {} sec.!'.format(total_prediction_time))
+		print('Predicted link prediction experiment in {} sec.!'.format(total_prediction_time))
 
-		return self.node_label_predictions
+		return self.edge_label_predictions
 
 	# evaluate prediction results through already pre-defined performance function(s), return results as a dict
 	def evaluate(self):
-		print('Evaluate multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
+		print('Evaluate link prediction experiment with {} on {} evaluated through {} on {}% train data!'
 			  .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
 		results = {}
 
 		if self.performance_function == self.BOTH:
-			results['macro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='macro')
-			results['micro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='micro')
+			results['macro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro')
+			results['micro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro')
 		elif self.performance_function == self.MACRO_F1:
-			results['macro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='macro')
+			results['macro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro')
 		elif self.performance_function == self.MICRO_F1:
-			results['micro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='micro')
+			results['micro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro')
 
 		return results
 
