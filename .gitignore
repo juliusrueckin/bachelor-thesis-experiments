@@ -9,7 +9,14 @@ verse/src/verse
 verse/src/verse-neigh
 verse/src/verse-simrank
 verse/karate.embs
+
 deepwalk-c/src/karate.bin
+
 node2vec-c/node2vec
 node2vec-c/node2vec.o
 node2vec-c/karate.bin
+
+LINE/linux/concatenate
+LINE/linux/gsl/
+LINE/linux/normalize
+LINE/linux/reconstruct
