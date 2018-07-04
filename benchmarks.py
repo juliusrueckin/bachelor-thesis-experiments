@@ -39,7 +39,7 @@ class LinkPrediction:
 
 	# node and edge embedding feature space, and new edges list
 	node_embeddings = []
-	edge_embeddings = []
+	edge_embeddings = np.empty(shape=(0, 128))
 	new_edges = []
 
 	# train-test split of new edges feature space
@@ -51,9 +51,8 @@ class LinkPrediction:
 	# randomly split new edges feature space in one half train and test set
 	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
 				 node_embeddings=None, new_edges=None, vector_operator='hadamard'):
-		print(
-			'Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'
-			.format(method_name, dataset_name, performance_function, self.train_size * 100.00))
+		print('Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'
+			  .format(method_name, dataset_name, performance_function, self.train_size * 100.00))
 
 		self.method_name = method_name
 		self.dataset_name = dataset_name
@@ -62,12 +61,19 @@ class LinkPrediction:
 		self.new_edges = new_edges
 		self.vector_operator = vector_operator
 
+		print('Compute edgewise features of new edges')
 		self.compute_new_edges_feature_space()
+
+		print('Make train-test split of new edges')
 		self.new_edges_train_test_split()
 
+	# randomly split edge_embeddings 50/50 in train and test feature space
 	def new_edges_train_test_split(self):
-		self.edge_embeddings_train = self.edge_embeddings[]
-		self.edge_embeddings_test = []
+		np.random.shuffle(self.edge_embeddings)
+		split_index = np.floor(np.shape(self.edge_embeddings)[0] * self.train_size).astype(int)
+
+		self.edge_embeddings_train = self.edge_embeddings[:split_index, :]
+		self.edge_embeddings_test = self.edge_embeddings[split_index:, :]
 
 	# compute new edge feature space based on configured vector operator
 	def compute_new_edges_feature_space(self):
@@ -76,15 +82,15 @@ class LinkPrediction:
 			n2 = np.array(self.node_embeddings[edge[1]])
 
 			if self.vector_operator == self.AVERAGE:
-				self.edge_embeddings.append(self.average_op(n1, n2))
+				self.edge_embeddings= np.concatenate((self.edge_embeddings, [self.average_op(n1, n2)]), axis=0)
 			elif self.vector_operator == self.CONCAT:
-				self.edge_embeddings.append(self.concat_op(n1, n2))
+				self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.concat_op(n1, n2)]), axis=0)
 			elif self.vector_operator == self.HADAMARD:
-				self.edge_embeddings.append(self.hadamard_op(n1, n2))
+				self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.hadamard_op(n1, n2)]), axis=0)
 			elif self.vector_operator == self.WEIGHTED_L1:
-				self.edge_embeddings.append(self.weighted_l1_op(n1, n2))
+				self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.weighted_l1_op(n1, n2)]), axis=0)
 			elif self.vector_operator == self.WEIGHTED_L2:
-				self.edge_embeddings.append(self.weighted_l2_op(n1, n2))
+				self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.weighted_l2_op(n1, n2)]), axis=0)
 
 	# implement all vector operators used in VERSE experiments for calculating edgewise embeddings
 	@staticmethod
