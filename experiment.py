@@ -2,10 +2,11 @@
 import numpy as np
 import json
 from itertools import product
-from benchmarks import MultiClassClassification
-from benchmarks import MultiLabelClassification
-from benchmarks import Clustering
-from benchmarks import LinkPrediction
+from multi_class_classification import MultiClassClassification
+from multi_label_classification import MultiLabelClassification
+from clustering import Clustering
+from link_prediction import LinkPrediction
+
 
 class Experiment:
 
