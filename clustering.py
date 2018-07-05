@@ -5,6 +5,7 @@ from sklearn.metrics import normalized_mutual_info_score, silhouette_score
 
 from benchmark import Benchmark
 
+
 class Clustering(Benchmark):
     start_time = None
     end_time = None
@@ -29,9 +30,17 @@ class Clustering(Benchmark):
     # model and its prediction
     k_means = None
 
-    # initialize classification algorithm with customized configuration parameters
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
                  embeddings=None, node_labels=None, n_clusters=2):
+        """
+        Initialize classification algorithm with customized configuration parameters
+        :param method_name:
+        :param dataset_name:
+        :param performance_function:
+        :param embeddings:
+        :param node_labels:
+        :param n_clusters:
+        """
         print('Initialize clustering experiment with {} on {} evaluated through {}!'
               .format(method_name, dataset_name, performance_function))
 
@@ -42,8 +51,11 @@ class Clustering(Benchmark):
         self.node_labels = node_labels
         self.n_clusters = n_clusters
 
-    # train clustering through k-means approach
     def train(self):
+        """
+        Train clustering through k-means approach
+        :return:
+        """
         print('Train clustering experiment with {} on {} evaluated through {}!'
               .format(self.method_name, self.dataset_name, self.performance_function))
 
@@ -59,8 +71,11 @@ class Clustering(Benchmark):
 
         return self.k_means
 
-    # predict clustering of each sample, based on nearest centroid
     def predict(self):
+        """
+        Predict clustering of each sample, based on nearest centroid
+        :return:
+        """
         print('Predict clustering experiment with {} on {} evaluated through {}!'
               .format(self.method_name, self.dataset_name, self.performance_function))
 
@@ -75,8 +90,11 @@ class Clustering(Benchmark):
 
         return self.node_label_predictions
 
-    # evaluate clustering quality through already pre-defined performance function(s), return results as a dict
     def evaluate(self):
+        """
+        Evaluate clustering quality through already pre-defined performance function(s), return results as a dict
+        :return:
+        """
         print('Evaluate clustering experiment with {} on {} evaluated through {}!'
               .format(self.method_name, self.dataset_name, self.performance_function))
 
