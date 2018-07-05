@@ -423,7 +423,6 @@ class Clustering:
 
 	# model and its prediction
 	k_means = None
-	node_label_predictions = []
 
 	# initialize classification algorithm with customized configuration parameters
 	def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
