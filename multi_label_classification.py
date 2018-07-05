@@ -79,7 +79,7 @@ class MultiLabelClassification(Benchmark):
         elif self.chosen_classifier == self.LOGISTIC_REGRESSION:
             self.multi_label_model = \
                 OneVsRestClassifier(
-                    LogisticRegression(penalty='l2', C=1., multi_class='multinomial', solver='saga',
+                    LogisticRegression(penalty='l2', C=1., multi_class='ovr', solver='saga',
                                        verbose=1, class_weight='balanced'), n_jobs=-1)
 
         self.multi_label_model.fit(self.embeddings_train, self.node_labels_train)
