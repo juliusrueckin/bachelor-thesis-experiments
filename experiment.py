@@ -2,7 +2,6 @@
 import numpy as np
 import json
 from itertools import product
-from verse.python.wrapper import VERSE
 from benchmarks import MultiClassClassification
 from benchmarks import MultiLabelClassification
 from benchmarks import Clustering
@@ -118,7 +117,7 @@ class Experiment:
 			for rep in range(self.repetitions):
 				self.init_run(run_params)
 
-				model = self.experiment.train()
+				self.experiment.train()
 				predictions = self.experiment.predict()
 				evaluation = self.experiment.evaluate()
 
