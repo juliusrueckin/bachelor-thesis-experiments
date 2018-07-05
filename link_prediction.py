@@ -5,6 +5,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
+from verse.python.convert import map_nodes_to_ids
+
 from benchmark import Benchmark
 
 
@@ -61,7 +63,19 @@ class LinkPrediction(Benchmark):
         self.dataset_name = dataset_name
         self.performance_function = performance_function
         self.node_embeddings = node_embeddings
-        self.new_edges = new_edges
+
+        nodes = set()
+        for edge in new_edges:
+            node1, node2 = edge
+            nodes.add(node1)
+            nodes.add(node2)
+        _, node2id, _ = map_nodes_to_ids(nodes)
+        new_edges_converted = []
+        for edge in new_edges:
+            node1, node2 = edge
+            new_edges_converted.append((node2id[node1], node2id[node2]))
+
+        self.new_edges = new_edges_converted
         self.vector_operator = vector_operator
         self.neg_edges = neg_edges
 

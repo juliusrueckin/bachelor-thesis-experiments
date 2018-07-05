@@ -44,6 +44,35 @@ def is_numbers_only(nodes):
 
 
 def list2mat(input, undirected, sep):
+    nodes = read_nodes_from_file(input, sep)
+    isnumbers, node2id, number_of_nodes = map_nodes_to_ids(nodes)
+    graph = build_graph(input, sep, node2id, undirected, isnumbers)
+    indptr = np.zeros(number_of_nodes + 1, dtype=np.int32)
+    indptr[0] = 0
+    for i in range(number_of_nodes):
+        indptr[i + 1] = indptr[i] + len(graph[i])
+    number_of_edges = indptr[-1]
+    indices = np.zeros(number_of_edges, dtype=np.int32)
+    cur = 0
+    for node in range(number_of_nodes):
+        for adjv in sorted(graph[node]):
+            indices[cur] = adjv
+            cur += 1
+    return indptr[:-1], indices
+
+
+def map_nodes_to_ids(nodes: set):
+    number_of_nodes = len(nodes)
+    isnumbers = is_numbers_only(nodes)
+    logging.info('Node IDs are numbers: %s', isnumbers)
+    if isnumbers:
+        node2id = dict(zip(sorted(map(int, nodes)), range(number_of_nodes)))
+    else:
+        node2id = dict(zip(sorted(nodes), range(number_of_nodes)))
+    return isnumbers, node2id, number_of_nodes
+
+
+def read_nodes_from_file(input, sep):
     nodes = set()
     with open(input, 'r') as inf:
         for line in inf:
@@ -64,13 +93,10 @@ def list2mat(input, undirected, sep):
                     raise ValueError("Incorrect graph format")
             for node in splt:
                 nodes.add(node)
-    number_of_nodes = len(nodes)
-    isnumbers = is_numbers_only(nodes)
-    logging.info('Node IDs are numbers: %s', isnumbers)
-    if isnumbers:
-        node2id = dict(zip(sorted(map(int, nodes)), range(number_of_nodes)))
-    else:
-        node2id = dict(zip(sorted(nodes), range(number_of_nodes)))
+    return nodes
+
+
+def build_graph(input, sep, node2id: dict, undirected, isnumbers):
     graph = defaultdict(set)
     with open(input, 'r') as inf:
         for line in inf:
@@ -95,18 +121,7 @@ def list2mat(input, undirected, sep):
                 graph[src].add(tgt)
                 if undirected:
                     graph[tgt].add(src)
-    indptr = np.zeros(number_of_nodes + 1, dtype=np.int32)
-    indptr[0] = 0
-    for i in range(number_of_nodes):
-        indptr[i + 1] = indptr[i] + len(graph[i])
-    number_of_edges = indptr[-1]
-    indices = np.zeros(number_of_edges, dtype=np.int32)
-    cur = 0
-    for node in range(number_of_nodes):
-        for adjv in sorted(graph[node]):
-            indices[cur] = adjv
-            cur += 1
-    return indptr[:-1], indices
+    return graph
 
 
 def process(format, matfile_variable_name, undirected, sep, input, output):
