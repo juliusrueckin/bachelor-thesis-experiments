@@ -86,13 +86,13 @@ class Clustering(Benchmark):
         results = {}
 
         if self.performance_function == self.BOTH:
-            results['nmi'] = normalized_mutual_info_score(self.node_labels, self.node_label_predictions)
-            results['silhouette'] = silhouette_score(self.embeddings, self.node_label_predictions,
-                                                     metric='cosine')
+            results['nmi'] = float(normalized_mutual_info_score(self.node_labels, self.node_label_predictions))
+            results['silhouette'] = float(silhouette_score(self.embeddings, self.node_label_predictions,
+                                                     metric='cosine'))
         elif self.performance_function == self.NMI:
-            results['nmi'] = normalized_mutual_info_score(self.node_labels, self.node_label_predictions)
+            results['nmi'] = float(normalized_mutual_info_score(self.node_labels, self.node_label_predictions))
         elif self.performance_function == self.SILHOUETTE:
-            results['silhouette'] = silhouette_score(self.embeddings, self.node_label_predictions,
-                                                     metric='cosine')
+            results['silhouette'] = float(silhouette_score(self.embeddings, self.node_label_predictions,
+                                                     metric='cosine'))
 
         return results

@@ -186,11 +186,11 @@ class LinkPrediction(Benchmark):
         results = {}
 
         if self.performance_function == self.BOTH:
-            results['macro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro')
-            results['micro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro')
+            results['macro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro'))
+            results['micro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro'))
         elif self.performance_function == self.MACRO_F1:
-            results['macro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro')
+            results['macro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro'))
         elif self.performance_function == self.MICRO_F1:
-            results['micro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro')
+            results['micro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro'))
 
         return results
