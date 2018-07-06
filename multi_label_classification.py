@@ -125,5 +125,7 @@ class MultiLabelClassification(Benchmark):
             results['macro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='macro'))
         elif self.performance_function == self.MICRO_F1:
             results['micro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='micro'))
+        else:
+            raise NotImplementedError('The evaluation metric {} is not supported'.format(self.performance_function))
 
         return results
