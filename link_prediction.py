@@ -170,7 +170,7 @@ class LinkPrediction(Benchmark):
         Predict class of each sample, based on pre-trained model
         :return:
         """
-        print('Predict multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
+        print('Predict link prediction experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
         start_time = time.time()

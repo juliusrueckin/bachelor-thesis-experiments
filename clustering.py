@@ -3,6 +3,8 @@ import time
 from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score, silhouette_score
 
+from verse.python.convert import map_nodes_to_ids
+
 from benchmark import Benchmark
 
 

@@ -10,33 +10,11 @@ from link_prediction import LinkPrediction
 
 class Experiment:
 
-    # general information
-    method_name = 'Verse-PPR'
-    dataset_name = 'Test-Data'
-
-    # evaluation
-    performance_function = 'both'
-    repetitions = 10
-    results_file_path = None
-
-    # experiment settings
-    experiment_type = 'clustering'
-    experiment = None
-    experiment_params = {}
-    experiment_results = {}
-    random_seed = None
-
     # experiment types
     CLUSTERING = 'clustering'
     CLASSIFICATION = 'classification'
     MULTI_LABEL_CLASSIFICATION = 'multi_label_classification'
     LINK_PREDICTION = 'link_prediction'
-
-    # node embeddings and their labels
-    embeddings_file_path = 'data/test_converter_verse_embeddings.bin'
-    node_embeddings = []
-    embedding_dimensionality = 128
-    node_labels = []
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi', node_labels=[],
                  embeddings_file_path='', node_embedings=None, embedding_dimensionality=128, repetitions=10,
@@ -68,6 +46,7 @@ class Experiment:
         self.experiment_type = experiment_type
         self.results_file_path = results_file_path
         self.random_seed = random_seed
+        self.experiment = None
 
         self.generate_cross_product_params()
 
