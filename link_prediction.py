@@ -10,22 +10,11 @@ from verse.python.convert import map_nodes_to_ids
 from benchmark import Benchmark
 
 
-
 class LinkPrediction(Benchmark):
     """
     link prediction through logistic regression on edgewise features
     wrapper for customizable initialization, training, prediction and evaluation
     """
-    start_time = None
-    end_time = None
-
-    # algorithm configurations
-    method_name = 'Verse-PPR'
-    dataset_name = 'Test-Data'
-    performance_function = 'Macro-F1'
-    train_size = 0.5
-    vector_operator = 'hadamard'
-    random_seed = None
 
     # performance evaluation methods
     MACRO_F1 = 'macro_f1'
@@ -39,22 +28,8 @@ class LinkPrediction(Benchmark):
     WEIGHTED_L1 = 'weighted_l1'
     WEIGHTED_L2 = 'weighted_l2'
 
-    # node and edge embedding feature space, new edges list and edge labels
-    node_embeddings = []
-    edge_embeddings = np.empty(shape=(0, 128))
-    new_edges = []
-    neg_edges = None
-    edge_labels = []
-
-    # train-test split of new edges feature space
-    edge_embeddings_train = []
-    edge_labels_train = []
-    edge_embeddings_test = []
-    edge_labels_test = []
-
-    # model and its prediction
-    logistic_regression_model = None
-    edge_label_predictions = []
+    # define train size
+    train_size = 0.5
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', neg_edges=None,
                  node_embeddings=None, new_edges=None, vector_operator='hadamard', random_seed=None):
@@ -79,6 +54,10 @@ class LinkPrediction(Benchmark):
         self.performance_function = performance_function
         self.node_embeddings = node_embeddings
         self.random_seed = random_seed
+        self.edge_embeddings = np.empty(shape=(0, np.shape(self.node_embeddings)[1]))
+        self.logistic_regression_model = None
+        self.edge_label_predictions = []
+        self.edge_labels = []
 
         nodes = set()
         for edge in new_edges:
@@ -172,16 +151,16 @@ class LinkPrediction(Benchmark):
         print('Train link prediction experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
-        self.start_time = time.time()
+        start_time = time.time()
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., solver='saga', multi_class='ovr',
                                                             verbose=1, class_weight='balanced',
                                                             random_state=self.random_seed)
         self.logistic_regression_model.fit(self.edge_embeddings_train, self.edge_labels_train)
 
-        self.end_time = time.time()
+        end_time = time.time()
 
-        total_train_time = round(self.end_time - self.start_time, 2)
+        total_train_time = round(end_time - start_time, 2)
         print('Trained link prediction experiment in {} sec.!'.format(total_train_time))
 
         return self.logistic_regression_model
@@ -194,13 +173,13 @@ class LinkPrediction(Benchmark):
         print('Predict multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
-        self.start_time = time.time()
+        start_time = time.time()
 
         self.edge_label_predictions = self.logistic_regression_model.predict(self.edge_embeddings_test)
 
-        self.end_time = time.time()
+        end_time = time.time()
 
-        total_prediction_time = round(self.end_time - self.start_time, 2)
+        total_prediction_time = round(end_time - start_time, 2)
         print('Predicted link prediction experiment in {} sec.!'.format(total_prediction_time))
 
         return self.edge_label_predictions

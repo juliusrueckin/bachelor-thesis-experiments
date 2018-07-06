@@ -12,34 +12,11 @@ class MultiClassClassification(Benchmark):
     Multi-class classification through logistic regression
     Wrapper for customizable initialization, training, prediction and evaluation
     """
-    start_time = None
-    end_time = None
-
-    # algorithm configurations
-    method_name = 'Verse-PPR'
-    dataset_name = 'Test-Data'
-    performance_function = 'Macro-F1'
-    train_size = 0.3
-    random_seed = None
 
     # performance evaluation methods
     MACRO_F1 = 'macro_f1'
     MICRO_F1 = 'micro_f1'
     BOTH = 'both'
-
-    # feature and label space
-    embeddings = []
-    node_labels = []
-
-    # train-test split of feature and label space
-    embeddings_train = []
-    node_labels_train = []
-    embeddings_test = []
-    node_labels_test = []
-
-    # model and its prediction
-    logistic_regression_model = None
-    node_label_predictions = []
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
                  train_size=0.3, embeddings=None, node_labels=None, random_seed=None):
@@ -65,6 +42,8 @@ class MultiClassClassification(Benchmark):
         self.embeddings = embeddings
         self.node_labels = node_labels
         self.random_seed = random_seed
+        self.logistic_regression_model = None
+        self.node_label_predictions = []
 
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
             train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size,
@@ -79,16 +58,16 @@ class MultiClassClassification(Benchmark):
         print('Train multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
-        self.start_time = time.time()
+        start_time = time.time()
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., multi_class='multinomial',
                                                             solver='saga', random_state=self.random_seed,
                                                             verbose=1, class_weight='balanced')
         self.logistic_regression_model.fit(self.embeddings_train, self.node_labels_train)
 
-        self.end_time = time.time()
+        end_time = time.time()
 
-        total_train_time = round(self.end_time - self.start_time, 2)
+        total_train_time = round(end_time - start_time, 2)
         print('Trained multi-class classification experiment in {} sec.!'.format(total_train_time))
 
         return self.logistic_regression_model
@@ -101,13 +80,13 @@ class MultiClassClassification(Benchmark):
         print('Predict multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
-        self.start_time = time.time()
+        start_time = time.time()
 
         self.node_label_predictions = self.logistic_regression_model.predict(self.embeddings_test)
 
-        self.end_time = time.time()
+        end_time = time.time()
 
-        total_prediction_time = round(self.end_time - self.start_time, 2)
+        total_prediction_time = round(end_time - start_time, 2)
         print('Predicted multi-class classification experiment in {} sec.!'.format(total_prediction_time))
 
         return self.node_label_predictions

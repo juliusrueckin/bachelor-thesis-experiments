@@ -7,29 +7,11 @@ from benchmark import Benchmark
 
 
 class Clustering(Benchmark):
-    start_time = None
-    end_time = None
-
-    # algorithm configurations
-    method_name = 'Verse-PPR'
-    dataset_name = 'Test-Data'
-    performance_function = 'nmi'
-    logistic_regression_model = None
-    node_label_predictions = []
-    n_clusters = 2
-    random_seed = None
 
     # performance evaluation methods
     NMI = 'nmi'
     SILHOUETTE = 'silhouette'
     BOTH = 'both'
-
-    # feature and label space
-    embeddings = []
-    node_labels = []
-
-    # model and its prediction
-    k_means = None
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
                  embeddings=None, node_labels=None, n_clusters=2, random_seed=None):
@@ -54,6 +36,8 @@ class Clustering(Benchmark):
         self.node_labels = node_labels
         self.n_clusters = n_clusters
         self.random_seed = random_seed
+        self.k_means = None
+        self.node_label_predictions = []
 
     def train(self):
         """
@@ -63,15 +47,15 @@ class Clustering(Benchmark):
         print('Train clustering experiment with {} on {} evaluated through {}!'
               .format(self.method_name, self.dataset_name, self.performance_function))
 
-        self.start_time = time.time()
+        start_time = time.time()
 
         self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1,
                               n_init=1, random_state=self.random_seed)
         self.k_means.fit(self.embeddings)
 
-        self.end_time = time.time()
+        end_time = time.time()
 
-        total_train_time = round(self.end_time - self.start_time, 2)
+        total_train_time = round(end_time - start_time, 2)
         print('Trained clustering experiment in {} sec.!'.format(total_train_time))
 
         return self.k_means
@@ -84,13 +68,13 @@ class Clustering(Benchmark):
         print('Predict clustering experiment with {} on {} evaluated through {}!'
               .format(self.method_name, self.dataset_name, self.performance_function))
 
-        self.start_time = time.time()
+        start_time = time.time()
 
         self.node_label_predictions = self.k_means.predict(self.embeddings)
 
-        self.end_time = time.time()
+        end_time = time.time()
 
-        total_prediction_time = round(self.end_time - self.start_time, 2)
+        total_prediction_time = round(end_time - start_time, 2)
         print('Predicted clustering experiment in {} sec.!'.format(total_prediction_time))
 
         return self.node_label_predictions
