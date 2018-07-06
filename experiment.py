@@ -1,6 +1,8 @@
 # import required packages
 import numpy as np
 import json
+from multiprocessing import Pool
+
 from itertools import product
 from multi_class_classification import MultiClassClassification
 from multi_label_classification import MultiLabelClassification
@@ -46,7 +48,6 @@ class Experiment:
         self.experiment_type = experiment_type
         self.results_file_path = results_file_path
         self.random_seed = random_seeds
-        self.experiment = None
         self.random_seeds = random_seeds
 
         assert len(self.random_seed) == self.repetitions, 'random seed array length and number of ' \
@@ -88,25 +89,21 @@ class Experiment:
 
     def init_run(self, run_params, random_seed):
         if self.experiment_type == self.CLASSIFICATION:
-            self.experiment = \
-                MultiClassClassification(method_name=self.method_name, dataset_name=self.dataset_name,
+            return MultiClassClassification(method_name=self.method_name, dataset_name=self.dataset_name,
                                          performance_function=self.performance_function,
                                          embeddings=self.node_embeddings,
                                          node_labels=self.node_labels, random_seed=random_seed)
         elif self.experiment_type == self.CLUSTERING:
-            self.experiment = \
-                Clustering(method_name=self.method_name, dataset_name=self.dataset_name,
+            return Clustering(method_name=self.method_name, dataset_name=self.dataset_name,
                            embeddings=self.node_embeddings, random_seed=random_seed, **run_params,
                            performance_function=self.performance_function, node_labels=self.node_labels)
         elif self.experiment_type == self.MULTI_LABEL_CLASSIFICATION:
-            self.experiment = \
-                MultiLabelClassification(method_name=self.method_name, dataset_name=self.dataset_name,
+            return MultiLabelClassification(method_name=self.method_name, dataset_name=self.dataset_name,
                                          node_labels=self.node_labels, random_seed=random_seed,
                                          performance_function=self.performance_function,
                                          embeddings=self.node_embeddings, **run_params)
         elif self.experiment_type == self.LINK_PREDICTION:
-            self.experiment = \
-                LinkPrediction(method_name=self.method_name, dataset_name=self.dataset_name,
+            return LinkPrediction(method_name=self.method_name, dataset_name=self.dataset_name,
                                node_embeddings=self.node_embeddings, random_seed=random_seed,
                                performance_function=self.performance_function, **run_params)
 
@@ -121,21 +118,10 @@ class Experiment:
                 'runs': []
             })
 
-            for rep in range(self.repetitions):
-                self.init_run(run_params, self.random_seeds[rep])
+            pool = Pool(self.repetitions)
+            results = pool.map(self.perform_single_run, [(index, rep, run_params) for rep in range(self.repetitions)])
+            self.experiment_results['parameterizations'][index]['runs'].extend(results)
 
-                self.experiment.train()
-                predictions = self.experiment.predict()
-                evaluation = self.experiment.evaluate()
-
-                run_results = {
-                    'run': rep + 1,
-                    'random_seed': self.random_seeds[rep],
-                    'predictions': predictions.tolist(),
-                    'evaluation': evaluation
-                }
-
-                self.experiment_results['parameterizations'][index]['runs'].append(run_results)
 
         print('Finished {} experiment on {} data set with {} embeddings'
               .format(self.experiment_type, self.dataset_name, self.method_name))
@@ -145,3 +131,20 @@ class Experiment:
             print('Saved results in file {}'.format(self.results_file_path))
 
         return self.experiment_results
+
+    def perform_single_run(self, single_run_params):
+        index, rep, run_params = single_run_params
+        experiment = self.init_run(run_params, self.random_seeds[rep])
+
+        experiment.train()
+        predictions = experiment.predict()
+        evaluation = experiment.evaluate()
+
+        run_results = {
+            'run': rep + 1,
+            'random_seed': self.random_seeds[rep],
+            'predictions': predictions.tolist(),
+            'evaluation': evaluation
+        }
+
+        return run_results
