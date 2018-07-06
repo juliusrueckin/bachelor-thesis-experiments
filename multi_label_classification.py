@@ -23,6 +23,7 @@ class MultiLabelClassification(Benchmark):
     train_size = 0.3
     n_neighbors = 5
     chosen_classifier = ''
+    random_seed = None
 
     # performance evaluation methods
     MACRO_F1 = 'macro_f1'
@@ -50,7 +51,8 @@ class MultiLabelClassification(Benchmark):
     # initialize classification algorithm with customized configuration parameters
     # produce random train-test split
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression'):
+                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression',
+                 random_seed=None):
         print('Initialize multi-label classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, train_size * 100.00))
 
@@ -62,9 +64,11 @@ class MultiLabelClassification(Benchmark):
         self.node_labels = MultiLabelBinarizer().fit_transform(node_labels)
         self.n_neighbors = n_neighbors
         self.chosen_classifier = classifier
+        self.random_seed = random_seed
 
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
-            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size)
+            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size,
+                             random_state=self.random_seed)
 
     # train through k-nearest neighbor classifier
     def train(self):
@@ -80,7 +84,7 @@ class MultiLabelClassification(Benchmark):
             self.multi_label_model = \
                 OneVsRestClassifier(
                     LogisticRegression(penalty='l2', C=1., multi_class='ovr', solver='saga',
-                                       verbose=1, class_weight='balanced'), n_jobs=-1)
+                                       verbose=1, class_weight='balanced', random_state=self.random_seed), n_jobs=-1)
 
         self.multi_label_model.fit(self.embeddings_train, self.node_labels_train)
 

@@ -16,6 +16,7 @@ class Clustering(Benchmark):
     logistic_regression_model = None
     node_label_predictions = []
     n_clusters = 2
+    random_seed = None
 
     # performance evaluation methods
     NMI = 'nmi'
@@ -31,7 +32,7 @@ class Clustering(Benchmark):
 
     # initialize classification algorithm with customized configuration parameters
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
-                 embeddings=None, node_labels=None, n_clusters=2):
+                 embeddings=None, node_labels=None, n_clusters=2, random_seed=None):
         print('Initialize clustering experiment with {} on {} evaluated through {}!'
               .format(method_name, dataset_name, performance_function))
 
@@ -41,6 +42,7 @@ class Clustering(Benchmark):
         self.embeddings = embeddings
         self.node_labels = node_labels
         self.n_clusters = n_clusters
+        self.random_seed = random_seed
 
     # train clustering through k-means approach
     def train(self):
@@ -49,7 +51,8 @@ class Clustering(Benchmark):
 
         self.start_time = time.time()
 
-        self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1, n_init=1)
+        self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1,
+                              n_init=1, random_state=self.random_seed)
         self.k_means.fit(self.embeddings)
 
         self.end_time = time.time()

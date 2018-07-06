@@ -18,6 +18,7 @@ class MultiClassClassification(Benchmark):
     dataset_name = 'Test-Data'
     performance_function = 'Macro-F1'
     train_size = 0.3
+    random_seed = None
 
     # performance evaluation methods
     MACRO_F1 = 'macro_f1'
@@ -41,7 +42,7 @@ class MultiClassClassification(Benchmark):
     # initialize classification algorithm with customized configuration parameters
     # produce random train-test split
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None):
+                 train_size=0.3, embeddings=None, node_labels=None, random_seed=None):
         print('Initialize multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, train_size * 100.00))
 
@@ -51,9 +52,11 @@ class MultiClassClassification(Benchmark):
         self.train_size = train_size
         self.embeddings = embeddings
         self.node_labels = node_labels
+        self.random_seed = random_seed
 
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
-            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size)
+            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size,
+                             random_state=self.random_seed)
 
     # train through logistic regression
     def train(self):
@@ -63,7 +66,7 @@ class MultiClassClassification(Benchmark):
         self.start_time = time.time()
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., multi_class='multinomial',
-                                                            solver='saga',
+                                                            solver='saga', random_state=self.random_seed,
                                                             verbose=1, class_weight='balanced')
         self.logistic_regression_model.fit(self.embeddings_train, self.node_labels_train)
 
