@@ -25,6 +25,7 @@ class MultiLabelClassification(Benchmark):
     train_size = 0.3
     n_neighbors = 5
     chosen_classifier = ''
+    random_seed = None
 
     # performance evaluation methods
     MACRO_F1 = 'macro_f1'
@@ -63,6 +64,7 @@ class MultiLabelClassification(Benchmark):
         :param n_neighbors:
         :param classifier:
         """
+        
         print('Initialize multi-label classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, train_size * 100.00))
 
@@ -74,9 +76,11 @@ class MultiLabelClassification(Benchmark):
         self.node_labels = MultiLabelBinarizer().fit_transform(node_labels)
         self.n_neighbors = n_neighbors
         self.chosen_classifier = classifier
+        self.random_seed = random_seed
 
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
-            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size)
+            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size,
+                             random_state=self.random_seed)
 
     def train(self):
         """
@@ -94,8 +98,8 @@ class MultiLabelClassification(Benchmark):
         elif self.chosen_classifier == self.LOGISTIC_REGRESSION:
             self.multi_label_model = \
                 OneVsRestClassifier(
-                    LogisticRegression(penalty='l2', C=1., multi_class='multinomial', solver='saga',
-                                       verbose=1, class_weight='balanced'), n_jobs=-1)
+                    LogisticRegression(penalty='l2', C=1., multi_class='ovr', solver='saga',
+                                       verbose=1, class_weight='balanced', random_state=self.random_seed), n_jobs=-1)
 
         self.multi_label_model.fit(self.embeddings_train, self.node_labels_train)
 
@@ -136,11 +140,11 @@ class MultiLabelClassification(Benchmark):
         results = {}
 
         if self.performance_function == self.BOTH:
-            results['macro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='macro')
-            results['micro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='micro')
+            results['macro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='macro'))
+            results['micro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='micro'))
         elif self.performance_function == self.MACRO_F1:
-            results['macro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='macro')
+            results['macro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='macro'))
         elif self.performance_function == self.MICRO_F1:
-            results['micro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='micro')
+            results['micro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='micro'))
 
         return results

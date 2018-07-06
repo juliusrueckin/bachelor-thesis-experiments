@@ -17,6 +17,7 @@ class Clustering(Benchmark):
     logistic_regression_model = None
     node_label_predictions = []
     n_clusters = 2
+    random_seed = None
 
     # performance evaluation methods
     NMI = 'nmi'
@@ -41,6 +42,7 @@ class Clustering(Benchmark):
         :param node_labels:
         :param n_clusters:
         """
+        
         print('Initialize clustering experiment with {} on {} evaluated through {}!'
               .format(method_name, dataset_name, performance_function))
 
@@ -50,6 +52,7 @@ class Clustering(Benchmark):
         self.embeddings = embeddings
         self.node_labels = node_labels
         self.n_clusters = n_clusters
+        self.random_seed = random_seed
 
     def train(self):
         """
@@ -61,7 +64,8 @@ class Clustering(Benchmark):
 
         self.start_time = time.time()
 
-        self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1, n_init=1)
+        self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1,
+                              n_init=1, random_state=self.random_seed)
         self.k_means.fit(self.embeddings)
 
         self.end_time = time.time()
@@ -101,13 +105,13 @@ class Clustering(Benchmark):
         results = {}
 
         if self.performance_function == self.BOTH:
-            results['nmi'] = normalized_mutual_info_score(self.node_labels, self.node_label_predictions)
-            results['silhouette'] = silhouette_score(self.embeddings, self.node_label_predictions,
-                                                     metric='cosine')
+            results['nmi'] = float(normalized_mutual_info_score(self.node_labels, self.node_label_predictions))
+            results['silhouette'] = float(silhouette_score(self.embeddings, self.node_label_predictions,
+                                                     metric='cosine'))
         elif self.performance_function == self.NMI:
-            results['nmi'] = normalized_mutual_info_score(self.node_labels, self.node_label_predictions)
+            results['nmi'] = float(normalized_mutual_info_score(self.node_labels, self.node_label_predictions))
         elif self.performance_function == self.SILHOUETTE:
-            results['silhouette'] = silhouette_score(self.embeddings, self.node_label_predictions,
-                                                     metric='cosine')
+            results['silhouette'] = float(silhouette_score(self.embeddings, self.node_label_predictions,
+                                                     metric='cosine'))
 
         return results

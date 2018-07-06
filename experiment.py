@@ -9,6 +9,7 @@ from link_prediction import LinkPrediction
 
 
 class Experiment:
+
     # general information
     method_name = 'Verse-PPR'
     dataset_name = 'Test-Data'

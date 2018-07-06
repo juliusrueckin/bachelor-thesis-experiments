@@ -25,6 +25,7 @@ class LinkPrediction(Benchmark):
     performance_function = 'Macro-F1'
     train_size = 0.5
     vector_operator = 'hadamard'
+    random_seed = None
 
     # performance evaluation methods
     MACRO_F1 = 'macro_f1'
@@ -68,6 +69,7 @@ class LinkPrediction(Benchmark):
         :param new_edges:
         :param vector_operator:
         """
+        
         print('Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, self.train_size * 100.00))
 
@@ -75,6 +77,7 @@ class LinkPrediction(Benchmark):
         self.dataset_name = dataset_name
         self.performance_function = performance_function
         self.node_embeddings = node_embeddings
+        self.random_seed = random_seed
 
         nodes = set()
         for edge in new_edges:
@@ -99,7 +102,8 @@ class LinkPrediction(Benchmark):
             self.compute_edgewise_features(self.neg_edges, 0)
 
         self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test = \
-            train_test_split(self.edge_embeddings, self.edge_labels, train_size=self.train_size, shuffle=True)
+            train_test_split(self.edge_embeddings, self.edge_labels, train_size=self.train_size,
+                             random_state=self.random_seed)
 
     def compute_edgewise_features(self, edges, label):
         """
@@ -170,7 +174,8 @@ class LinkPrediction(Benchmark):
         self.start_time = time.time()
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., solver='saga', multi_class='ovr',
-                                                            verbose=1, class_weight='balanced')
+                                                            verbose=1, class_weight='balanced',
+                                                            random_state=self.random_seed)
         self.logistic_regression_model.fit(self.edge_embeddings_train, self.edge_labels_train)
 
         self.end_time = time.time()
@@ -210,11 +215,11 @@ class LinkPrediction(Benchmark):
         results = {}
 
         if self.performance_function == self.BOTH:
-            results['macro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro')
-            results['micro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro')
+            results['macro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro'))
+            results['micro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro'))
         elif self.performance_function == self.MACRO_F1:
-            results['macro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro')
+            results['macro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro'))
         elif self.performance_function == self.MICRO_F1:
-            results['micro'] = f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro')
+            results['micro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro'))
 
         return results

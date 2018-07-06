@@ -20,6 +20,7 @@ class MultiClassClassification(Benchmark):
     dataset_name = 'Test-Data'
     performance_function = 'Macro-F1'
     train_size = 0.3
+    random_seed = None
 
     # performance evaluation methods
     MACRO_F1 = 'macro_f1'
@@ -52,6 +53,7 @@ class MultiClassClassification(Benchmark):
         :param embeddings:
         :param node_labels:
         """
+
         print('Initialize multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, train_size * 100.00))
 
@@ -61,9 +63,11 @@ class MultiClassClassification(Benchmark):
         self.train_size = train_size
         self.embeddings = embeddings
         self.node_labels = node_labels
+        self.random_seed = random_seed
 
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
-            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size)
+            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size,
+                             random_state=self.random_seed)
 
     # train through logistic regression
     def train(self):
@@ -77,7 +81,7 @@ class MultiClassClassification(Benchmark):
         self.start_time = time.time()
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., multi_class='multinomial',
-                                                            solver='saga',
+                                                            solver='saga', random_state=self.random_seed,
                                                             verbose=1, class_weight='balanced')
         self.logistic_regression_model.fit(self.embeddings_train, self.node_labels_train)
 
@@ -118,11 +122,11 @@ class MultiClassClassification(Benchmark):
         results = {}
 
         if self.performance_function == self.BOTH:
-            results['macro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='macro')
-            results['micro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='micro')
+            results['macro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='macro'))
+            results['micro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='micro'))
         elif self.performance_function == self.MACRO_F1:
-            results['macro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='macro')
+            results['macro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='macro'))
         elif self.performance_function == self.MICRO_F1:
-            results['micro'] = f1_score(self.node_labels_test, self.node_label_predictions, average='micro')
+            results['micro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='micro'))
 
         return results
