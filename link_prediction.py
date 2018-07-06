@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
+from typing import List
+from tqdm import tqdm
 
 from verse.python.convert import map_nodes_to_ids
 
@@ -45,7 +47,7 @@ class LinkPrediction(Benchmark):
         :param vector_operator:
         :param random_seed:
         """
-        
+
         print('Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, self.train_size * 100.00))
 
@@ -74,8 +76,15 @@ class LinkPrediction(Benchmark):
         self.vector_operator = vector_operator
         self.neg_edges = neg_edges
 
+        assert len(self.edge_labels) == 0, str(len(self.edge_labels))
+        assert len(self.edge_embeddings) == 0, str(len(self.edge_embeddings))
+
         print('Compute edgewise features based on {} operator!'.format(self.vector_operator))
         self.compute_edgewise_features(self.new_edges, 1)
+
+        assert len(self.edge_labels) == len(self.new_edges), "{} {}".format(len(self.edge_labels), len(self.new_edges))
+        assert len(self.edge_embeddings) == len(self.new_edges), "{} {}".format(len(self.edge_embeddings), len(self.new_edges))
+
         if self.neg_edges is None:
             self.compute_edgewise_features(self.sample_non_existing_edges(len(self.new_edges)), 0)
         else:
@@ -92,24 +101,26 @@ class LinkPrediction(Benchmark):
         :param label:
         :return:
         """
-        for edge in edges:
+        vectors = []
+        for edge in tqdm(edges):
             n1 = np.array(self.node_embeddings[edge[0]])
             n2 = np.array(self.node_embeddings[edge[1]])
 
             if self.vector_operator == self.AVERAGE:
-                self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.average_op(n1, n2)]), axis=0)
+                vectors.append(self.average_op(n1, n2))
             elif self.vector_operator == self.CONCAT:
-                self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.concat_op(n1, n2)]), axis=0)
+                vectors.append(self.concat_op(n1, n2))
             elif self.vector_operator == self.HADAMARD:
-                self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.hadamard_op(n1, n2)]), axis=0)
+                vectors.append(self.hadamard_op(n1, n2))
             elif self.vector_operator == self.WEIGHTED_L1:
-                self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.weighted_l1_op(n1, n2)]), axis=0)
+                vectors.append(self.weighted_l1_op(n1, n2))
             elif self.vector_operator == self.WEIGHTED_L2:
-                self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.weighted_l2_op(n1, n2)]), axis=0)
+                vectors.append(self.average_op(n1, n2))
             else:
                 raise NotImplementedError('This vector operation is not supported')
 
             self.edge_labels.append(label)
+        self.edge_embeddings = np.concatenate((self.edge_embeddings, vectors), axis=0)
 
     #TODO: implement all vector operators used in VERSE experiments for calculating edgewise embeddings
     @staticmethod
@@ -155,7 +166,7 @@ class LinkPrediction(Benchmark):
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., solver='saga', multi_class='ovr',
                                                             verbose=1, class_weight='balanced',
-                                                            random_state=self.random_seed)
+                                                            random_state=self.random_seed, n_jobs=-1)
         self.logistic_regression_model.fit(self.edge_embeddings_train, self.edge_labels_train)
 
         end_time = time.time()
