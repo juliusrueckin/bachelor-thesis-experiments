@@ -10,9 +10,12 @@ from verse.python.convert import map_nodes_to_ids
 from benchmark import Benchmark
 
 
-# link prediction through logistic regression on edgewise features
-# wrapper for customizable initialization, training, prediction and evaluation
+
 class LinkPrediction(Benchmark):
+    """
+    link prediction through logistic regression on edgewise features
+    wrapper for customizable initialization, training, prediction and evaluation
+    """
     start_time = None
     end_time = None
 
@@ -53,10 +56,20 @@ class LinkPrediction(Benchmark):
     logistic_regression_model = None
     edge_label_predictions = []
 
-    # initialize link prediction algorithm with customized configuration parameters
-    # compute edgewise features
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', neg_edges=None,
-                 node_embeddings=None, new_edges=None, vector_operator='hadamard', random_seed=None):
+                 node_embeddings=None, new_edges=None, vector_operator='hadamard'):
+        """
+        Initialize link prediction algorithm with customized configuration parameters
+        Compute edgewise features
+        :param method_name:
+        :param dataset_name:
+        :param performance_function:
+        :param neg_edges:
+        :param node_embeddings:
+        :param new_edges:
+        :param vector_operator:
+        """
+        
         print('Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, self.train_size * 100.00))
 
@@ -92,8 +105,13 @@ class LinkPrediction(Benchmark):
             train_test_split(self.edge_embeddings, self.edge_labels, train_size=self.train_size,
                              random_state=self.random_seed)
 
-    # compute new edge feature space based on configured vector operator
     def compute_edgewise_features(self, edges, label):
+        """
+        Compute new edge feature space based on configured vector operator
+        :param edges:
+        :param label:
+        :return:
+        """
         for edge in edges:
             n1 = np.array(self.node_embeddings[edge[0]])
             n2 = np.array(self.node_embeddings[edge[1]])
@@ -108,10 +126,12 @@ class LinkPrediction(Benchmark):
                 self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.weighted_l1_op(n1, n2)]), axis=0)
             elif self.vector_operator == self.WEIGHTED_L2:
                 self.edge_embeddings = np.concatenate((self.edge_embeddings, [self.weighted_l2_op(n1, n2)]), axis=0)
+            else:
+                raise NotImplementedError('This vector operation is not supported')
 
             self.edge_labels.append(label)
 
-    # implement all vector operators used in VERSE experiments for calculating edgewise embeddings
+    #TODO: implement all vector operators used in VERSE experiments for calculating edgewise embeddings
     @staticmethod
     def average_op(n1, n2):
         return (n1 + n2) / 2
@@ -143,8 +163,11 @@ class LinkPrediction(Benchmark):
 
         return non_existing_edges
 
-    # train through logistic regression
     def train(self):
+        """
+        Train through logistic regression
+        :return:
+        """
         print('Train link prediction experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
@@ -162,8 +185,11 @@ class LinkPrediction(Benchmark):
 
         return self.logistic_regression_model
 
-    # predict class of each sample, based on pre-trained model
     def predict(self):
+        """
+        Predict class of each sample, based on pre-trained model
+        :return:
+        """
         print('Predict multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
@@ -178,8 +204,11 @@ class LinkPrediction(Benchmark):
 
         return self.edge_label_predictions
 
-    # evaluate prediction results through already pre-defined performance function(s), return results as a dict
     def evaluate(self):
+        """
+        Evaluate prediction results through already pre-defined performance function(s), return results as a dict
+        :return:
+        """
         print('Evaluate link prediction experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 

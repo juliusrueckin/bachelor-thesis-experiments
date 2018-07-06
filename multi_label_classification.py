@@ -10,9 +10,11 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from benchmark import Benchmark
 
 
-# multi-label classification through k-nearest neighbor classifier or one vs. rest logistic regression
-# wrapper for customizable initialization, training, prediction and evaluation
 class MultiLabelClassification(Benchmark):
+    """
+    Multi-label classification through k-nearest neighbor classifier or one vs. rest logistic regression
+    Wrapper for customizable initialization, training, prediction and evaluation
+    """
     start_time = None
     end_time = None
 
@@ -48,11 +50,21 @@ class MultiLabelClassification(Benchmark):
     multi_label_model = None
     node_label_predictions = []
 
-    # initialize classification algorithm with customized configuration parameters
-    # produce random train-test split
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression',
-                 random_seed=None):
+                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression'):
+        """
+        Initialize classification algorithm with customized configuration parameters
+        Produce random train-test split
+        :param method_name:
+        :param dataset_name:
+        :param performance_function:
+        :param train_size:
+        :param embeddings:
+        :param node_labels:
+        :param n_neighbors:
+        :param classifier:
+        """
+        
         print('Initialize multi-label classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, train_size * 100.00))
 
@@ -70,8 +82,11 @@ class MultiLabelClassification(Benchmark):
             train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size,
                              random_state=self.random_seed)
 
-    # train through k-nearest neighbor classifier
     def train(self):
+        """
+        Train through logistic regression
+        :return:
+        """
         print('Train multi-label classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
@@ -95,8 +110,11 @@ class MultiLabelClassification(Benchmark):
 
         return self.multi_label_model
 
-    # predict class of each sample, based on pre-trained model
     def predict(self):
+        """
+        Predict class of each sample, based on pre-trained model
+        :return:
+        """
         print('Predict multi-label classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
@@ -111,8 +129,11 @@ class MultiLabelClassification(Benchmark):
 
         return self.node_label_predictions
 
-    # evaluate prediction results through already pre-defined performance function(s), return results as a dict
     def evaluate(self):
+        """
+        Evaluate prediction results through already pre-defined performance function(s), return results as a dict
+        :return:
+        """
         print('Evaluate multi-label classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 

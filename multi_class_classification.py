@@ -7,9 +7,11 @@ from sklearn.model_selection import train_test_split
 from benchmark import Benchmark
 
 
-# multi-class classification through logistic regression
-# wrapper for customizable initialization, training, prediction and evaluation
 class MultiClassClassification(Benchmark):
+    """
+    Multi-class classification through logistic regression
+    Wrapper for customizable initialization, training, prediction and evaluation
+    """
     start_time = None
     end_time = None
 
@@ -39,10 +41,19 @@ class MultiClassClassification(Benchmark):
     logistic_regression_model = None
     node_label_predictions = []
 
-    # initialize classification algorithm with customized configuration parameters
-    # produce random train-test split
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None, random_seed=None):
+                 train_size=0.3, embeddings=None, node_labels=None):
+        """
+        Initialize classification algorithm with customized configuration parameters
+        Produce random train-test split
+        :param method_name:
+        :param dataset_name:
+        :param performance_function:
+        :param train_size:
+        :param embeddings:
+        :param node_labels:
+        """
+
         print('Initialize multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(method_name, dataset_name, performance_function, train_size * 100.00))
 
@@ -60,6 +71,10 @@ class MultiClassClassification(Benchmark):
 
     # train through logistic regression
     def train(self):
+        """
+        Train through logistic regression
+        :return:
+        """
         print('Train multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
@@ -77,8 +92,11 @@ class MultiClassClassification(Benchmark):
 
         return self.logistic_regression_model
 
-    # predict class of each sample, based on pre-trained model
     def predict(self):
+        """
+        Predict class of each sample, based on pre-trained model
+        :return:
+        """
         print('Predict multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
@@ -93,8 +111,11 @@ class MultiClassClassification(Benchmark):
 
         return self.node_label_predictions
 
-    # evaluate prediction results through already pre-defined performance function(s), return results as a dict
     def evaluate(self):
+        """
+        Evaluate prediction results through already pre-defined performance function(s), return results as a dict
+        :return:
+        """
         print('Evaluate multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
