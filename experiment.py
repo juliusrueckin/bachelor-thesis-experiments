@@ -24,6 +24,7 @@ class Experiment:
     experiment = None
     experiment_params = {}
     experiment_results = {}
+    random_seed = None
 
     # experiment types
     CLUSTERING = 'clustering'
@@ -39,7 +40,7 @@ class Experiment:
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi', node_labels=[],
                  embeddings_file_path='', node_embedings=None, embedding_dimensionality=128, repetitions=10,
-                 experiment_params={}, experiment_type='clustering', results_file_path=None):
+                 experiment_params={}, experiment_type='clustering', results_file_path=None, random_seed=None):
         """
         Initialize experiment with given configuration parameters
         :param method_name:
@@ -53,6 +54,7 @@ class Experiment:
         :param experiment_params:
         :param experiment_type:
         :param results_file_path:
+        :param random_seed:
         """
         self.method_name = method_name
         self.dataset_name = dataset_name
@@ -65,6 +67,7 @@ class Experiment:
         self.experiment_params = experiment_params
         self.experiment_type = experiment_type
         self.results_file_path = results_file_path
+        self.random_seed = random_seed
 
         self.generate_cross_product_params()
 
@@ -106,23 +109,22 @@ class Experiment:
                 MultiClassClassification(method_name=self.method_name, dataset_name=self.dataset_name,
                                          performance_function=self.performance_function,
                                          embeddings=self.node_embeddings,
-                                         node_labels=self.node_labels)
+                                         node_labels=self.node_labels, random_seed=self.random_seed)
         elif self.experiment_type == self.CLUSTERING:
             self.experiment = \
                 Clustering(method_name=self.method_name, dataset_name=self.dataset_name,
-                           embeddings=self.node_embeddings,
-                           performance_function=self.performance_function, node_labels=self.node_labels, **run_params)
+                           embeddings=self.node_embeddings, random_seed=self.random_seed, **run_params,
+                           performance_function=self.performance_function, node_labels=self.node_labels)
         elif self.experiment_type == self.MULTI_LABEL_CLASSIFICATION:
             self.experiment = \
                 MultiLabelClassification(method_name=self.method_name, dataset_name=self.dataset_name,
-                                         node_labels=self.node_labels,
+                                         node_labels=self.node_labels, random_seed=self.random_seed,
                                          performance_function=self.performance_function,
-                                         embeddings=self.node_embeddings,
-                                         **run_params)
+                                         embeddings=self.node_embeddings, **run_params)
         elif self.experiment_type == self.LINK_PREDICTION:
             self.experiment = \
                 LinkPrediction(method_name=self.method_name, dataset_name=self.dataset_name,
-                               node_embeddings=self.node_embeddings,
+                               node_embeddings=self.node_embeddings, random_seed=self.random_seed,
                                performance_function=self.performance_function, **run_params)
 
     def run(self):

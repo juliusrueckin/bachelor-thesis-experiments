@@ -57,7 +57,7 @@ class LinkPrediction(Benchmark):
     edge_label_predictions = []
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', neg_edges=None,
-                 node_embeddings=None, new_edges=None, vector_operator='hadamard'):
+                 node_embeddings=None, new_edges=None, vector_operator='hadamard', random_seed=None):
         """
         Initialize link prediction algorithm with customized configuration parameters
         Compute edgewise features
@@ -68,6 +68,7 @@ class LinkPrediction(Benchmark):
         :param node_embeddings:
         :param new_edges:
         :param vector_operator:
+        :param random_seed:
         """
         
         print('Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'

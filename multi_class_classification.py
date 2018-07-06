@@ -42,7 +42,7 @@ class MultiClassClassification(Benchmark):
     node_label_predictions = []
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None):
+                 train_size=0.3, embeddings=None, node_labels=None, random_seed=None):
         """
         Initialize classification algorithm with customized configuration parameters
         Produce random train-test split
@@ -52,6 +52,7 @@ class MultiClassClassification(Benchmark):
         :param train_size:
         :param embeddings:
         :param node_labels:
+        :param random_seed:
         """
 
         print('Initialize multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'

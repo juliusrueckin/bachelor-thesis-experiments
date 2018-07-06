@@ -32,7 +32,7 @@ class Clustering(Benchmark):
     k_means = None
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
-                 embeddings=None, node_labels=None, n_clusters=2):
+                 embeddings=None, node_labels=None, n_clusters=2, random_seed=None):
         """
         Initialize classification algorithm with customized configuration parameters
         :param method_name:
@@ -41,6 +41,7 @@ class Clustering(Benchmark):
         :param embeddings:
         :param node_labels:
         :param n_clusters:
+        :param random_seed:
         """
         
         print('Initialize clustering experiment with {} on {} evaluated through {}!'

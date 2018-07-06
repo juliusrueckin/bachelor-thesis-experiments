@@ -51,7 +51,8 @@ class MultiLabelClassification(Benchmark):
     node_label_predictions = []
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression'):
+                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression',
+                 random_seed=None):
         """
         Initialize classification algorithm with customized configuration parameters
         Produce random train-test split
@@ -63,6 +64,7 @@ class MultiLabelClassification(Benchmark):
         :param node_labels:
         :param n_neighbors:
         :param classifier:
+        :param random_seed:
         """
         
         print('Initialize multi-label classification experiment with {} on {} evaluated through {} on {}% train data!'
