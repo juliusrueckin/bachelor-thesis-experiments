@@ -6,6 +6,7 @@ from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 from typing import List
 from tqdm import tqdm
+import pickle
 
 from verse.python.convert import map_nodes_to_ids
 
@@ -34,18 +35,22 @@ class LinkPrediction(Benchmark):
     train_size = 0.5
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', neg_edges=None,
-                 node_embeddings=None, new_edges=None, vector_operator='hadamard', random_seed=None):
+                 node_embeddings=None, new_edges=None, vector_operator='hadamard', random_seed=None,
+                 node2id_filepath=None, edge_list=None, ignore_new_nodes=True):
         """
         Initialize link prediction algorithm with customized configuration parameters
         Compute edgewise features
         :param method_name:
         :param dataset_name:
         :param performance_function:
-        :param neg_edges:
+        :param neg_edges: Edges which aren't in the delta of timesteps t_0 and t_1. We sample the edges, if this parameter isn't set. Identifier of nodes is the original id which is also used in node2id as key, would be the Q-id in wikidata.
         :param node_embeddings:
-        :param new_edges:
+        :param new_edges: Delta of edges between timesteps t_0 and t_1: All edges which are new in t_1, doesn't consider edges which were removed. Identifier of nodes is the original id which is also used in node2id as key, would be the Q-id in wikidata.
         :param vector_operator:
         :param random_seed:
+        :param node2id_filepath: Path where the node2id dict is located. If this argument is None, the node ids are calculated from the new_edges and neg_edges
+        :param edge_list: List of all edges in graph at timestep t_0 with original id.
+        :param ignore_new_nodes: Ignore edges with new nodes in new_edges and neg_edges
         """
 
         print('Initialize link prediction experiment with {} on {} evaluated through {} on {}% train data!'
@@ -61,20 +66,68 @@ class LinkPrediction(Benchmark):
         self.edge_label_predictions = []
         self.edge_labels = []
 
-        nodes = set()
-        for edge in new_edges:
-            node1, node2 = edge
-            nodes.add(node1)
-            nodes.add(node2)
-        _, node2id, _ = map_nodes_to_ids(nodes)
+        if node2id_filepath is not None:
+            print("Use ids for nodes from node2id dict")
+            with open(node2id_filepath, 'rb') as file:
+                self.node2id = pickle.load(file)
+            if not ignore_new_nodes:
+                # Find all nodes
+                nodes = set()
+                for edge in tqdm(new_edges):
+                    node1, node2 = edge
+                    nodes.add(node1)
+                    nodes.add(node2)
+
+                if neg_edges is not None:
+                    for edge in tqdm(neg_edges):
+                        node1, node2 = edge
+                        nodes.add(node1)
+                        nodes.add(node2)
+                # Assign an id to new nodes
+                max_id = max(self.node2id.values())
+                for node in nodes:
+                    if node not in self.node2id.keys():
+                        max_id += 1
+                        self.node2id[node] = max_id
+        else:
+            print("Calculate ids for nodes")
+            nodes = set()
+            for edge in tqdm(edge_list):
+                node1, node2 = edge
+                nodes.add(node1)
+                nodes.add(node2)
+            if not ignore_new_nodes:
+                for edge in tqdm(new_edges):
+                    node1, node2 = edge
+                    nodes.add(node1)
+                    nodes.add(node2)
+                if neg_edges is not None:
+                    for edge in tqdm(neg_edges):
+                        node1, node2 = edge
+                        nodes.add(node1)
+                        nodes.add(node2)
+            _, self.node2id, _ = map_nodes_to_ids(nodes)
         new_edges_converted = []
         for edge in new_edges:
             node1, node2 = edge
-            new_edges_converted.append((node2id[node1], node2id[node2]))
+            if ignore_new_nodes:
+                # Filter edges with new nodes
+                if node1 not in self.node2id.keys() or node2 not in self.node2id.keys():
+                    continue
+            new_edges_converted.append((self.node2id[node1], self.node2id[node2]))
+
+        neg_edges_converted = []
+        for edge in neg_edges:
+            node1, node2 = edge
+            if ignore_new_nodes:
+                # Filter edges with new nodes
+                if node1 not in self.node2id.keys() or node2 not in self.node2id.keys():
+                    continue
+            neg_edges_converted.append((self.node2id[node1], self.node2id[node2]))
 
         self.new_edges = new_edges_converted
         self.vector_operator = vector_operator
-        self.neg_edges = neg_edges
+        self.neg_edges = neg_edges_converted
 
         assert len(self.edge_labels) == 0, str(len(self.edge_labels))
         assert len(self.edge_embeddings) == 0, str(len(self.edge_embeddings))
@@ -83,7 +136,8 @@ class LinkPrediction(Benchmark):
         self.compute_edgewise_features(self.new_edges, 1)
 
         assert len(self.edge_labels) == len(self.new_edges), "{} {}".format(len(self.edge_labels), len(self.new_edges))
-        assert len(self.edge_embeddings) == len(self.new_edges), "{} {}".format(len(self.edge_embeddings), len(self.new_edges))
+        assert len(self.edge_embeddings) == len(self.new_edges), "{} {}".format(len(self.edge_embeddings),
+                                                                                len(self.new_edges))
 
         if self.neg_edges is None:
             self.compute_edgewise_features(self.sample_non_existing_edges(len(self.new_edges)), 0)
@@ -122,7 +176,7 @@ class LinkPrediction(Benchmark):
             self.edge_labels.append(label)
         self.edge_embeddings = np.concatenate((self.edge_embeddings, vectors), axis=0)
 
-    #TODO: implement all vector operators used in VERSE experiments for calculating edgewise embeddings
+    # TODO: implement all vector operators used in VERSE experiments for calculating edgewise embeddings
     @staticmethod
     def average_op(n1, n2):
         return (n1 + n2) / 2

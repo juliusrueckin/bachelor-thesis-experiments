@@ -11,6 +11,7 @@ from struct import pack
 import click
 import logging
 import numpy as np
+import pickle
 
 
 MAGIC = 'XGFS'.encode('utf8')
@@ -61,7 +62,7 @@ def list2mat(input, undirected, sep):
     return indptr[:-1], indices
 
 
-def map_nodes_to_ids(nodes: set):
+def map_nodes_to_ids(nodes: set, filepath_pickle: str = None):
     number_of_nodes = len(nodes)
     isnumbers = is_numbers_only(nodes)
     logging.info('Node IDs are numbers: %s', isnumbers)
@@ -69,7 +70,24 @@ def map_nodes_to_ids(nodes: set):
         node2id = dict(zip(sorted(map(int, nodes)), range(number_of_nodes)))
     else:
         node2id = dict(zip(sorted(nodes), range(number_of_nodes)))
+    if filepath_pickle is not None:
+        with open(filepath_pickle, 'wb') as file:
+            pickle.dump(node2id, file)
     return isnumbers, node2id, number_of_nodes
+
+
+def map_ids_to_nodes(nodes: set, filepath_pickle: str = None):
+    number_of_nodes = len(nodes)
+    isnumbers = is_numbers_only(nodes)
+    logging.info('Node IDs are numbers: %s', isnumbers)
+    if isnumbers:
+        id2node = dict(zip(range(number_of_nodes), sorted(map(int, nodes))))
+    else:
+        id2node = dict(zip(range(number_of_nodes), sorted(nodes)))
+    if filepath_pickle is not None:
+        with open(filepath_pickle, 'wb') as file:
+            pickle.dump(id2node, file)
+    return isnumbers, id2node, number_of_nodes
 
 
 def read_nodes_from_file(input, sep):
