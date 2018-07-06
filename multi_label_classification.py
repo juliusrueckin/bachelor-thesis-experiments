@@ -77,8 +77,8 @@ class MultiLabelClassification(Benchmark):
         elif self.chosen_classifier == self.LOGISTIC_REGRESSION:
             self.multi_label_model = \
                 OneVsRestClassifier(
-                    LogisticRegression(penalty='l2', C=1., multi_class='ovr', solver='saga',
-                                       verbose=1, class_weight='balanced', random_state=self.random_seed), n_jobs=-1)
+                    LogisticRegression(penalty='l2', C=1., multi_class='ovr', solver='saga',verbose=1,
+                                       class_weight='balanced', random_state=self.random_seed, n_jobs=-1), n_jobs=-1)
 
         self.multi_label_model.fit(self.embeddings_train, self.node_labels_train)
 
@@ -125,5 +125,7 @@ class MultiLabelClassification(Benchmark):
             results['macro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='macro'))
         elif self.performance_function == self.MICRO_F1:
             results['micro'] = float(f1_score(self.node_labels_test, self.node_label_predictions, average='micro'))
+        else:
+            raise NotImplementedError('The evaluation metric {} is not supported'.format(self.performance_function))
 
         return results

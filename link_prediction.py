@@ -235,7 +235,7 @@ class LinkPrediction(Benchmark):
         Predict class of each sample, based on pre-trained model
         :return:
         """
-        print('Predict multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
+        print('Predict link prediction experiment with {} on {} evaluated through {} on {}% train data!'
               .format(self.method_name, self.dataset_name, self.performance_function, self.train_size * 100.00))
 
         start_time = time.time()
@@ -266,5 +266,7 @@ class LinkPrediction(Benchmark):
             results['macro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='macro'))
         elif self.performance_function == self.MICRO_F1:
             results['micro'] = float(f1_score(self.edge_labels_test, self.edge_label_predictions, average='micro'))
+        else:
+            raise NotImplementedError('The evaluation metric {} is not supported'.format(self.performance_function))
 
         return results

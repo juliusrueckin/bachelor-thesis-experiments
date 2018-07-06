@@ -3,6 +3,8 @@ import time
 from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score, silhouette_score
 
+from verse.python.convert import map_ids_to_nodes
+
 from benchmark import Benchmark
 
 
@@ -92,11 +94,13 @@ class Clustering(Benchmark):
         if self.performance_function == self.BOTH:
             results['nmi'] = float(normalized_mutual_info_score(self.node_labels, self.node_label_predictions))
             results['silhouette'] = float(silhouette_score(self.embeddings, self.node_label_predictions,
-                                                     metric='cosine'))
+                                                           metric='cosine'))
         elif self.performance_function == self.NMI:
             results['nmi'] = float(normalized_mutual_info_score(self.node_labels, self.node_label_predictions))
         elif self.performance_function == self.SILHOUETTE:
             results['silhouette'] = float(silhouette_score(self.embeddings, self.node_label_predictions,
-                                                     metric='cosine'))
+                                                           metric='cosine'))
+        else:
+            raise NotImplementedError('The evaluation metric {} is not supported'.format(self.performance_function))
 
         return results
