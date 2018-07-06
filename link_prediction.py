@@ -155,7 +155,7 @@ class LinkPrediction(Benchmark):
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., solver='saga', multi_class='ovr',
                                                             verbose=1, class_weight='balanced',
-                                                            random_state=self.random_seed)
+                                                            random_state=self.random_seed, n_jobs=-1)
         self.logistic_regression_model.fit(self.edge_embeddings_train, self.edge_labels_train)
 
         end_time = time.time()

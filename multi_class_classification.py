@@ -62,7 +62,7 @@ class MultiClassClassification(Benchmark):
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., multi_class='multinomial',
                                                             solver='saga', random_state=self.random_seed,
-                                                            verbose=1, class_weight='balanced')
+                                                            verbose=1, class_weight='balanced', n_jobs=-1)
         self.logistic_regression_model.fit(self.embeddings_train, self.node_labels_train)
 
         end_time = time.time()
