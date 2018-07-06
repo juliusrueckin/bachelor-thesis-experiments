@@ -72,6 +72,17 @@ def map_nodes_to_ids(nodes: set):
     return isnumbers, node2id, number_of_nodes
 
 
+def map_ids_to_nodes(nodes: set):
+    number_of_nodes = len(nodes)
+    isnumbers = is_numbers_only(nodes)
+    logging.info('Node IDs are numbers: %s', isnumbers)
+    if isnumbers:
+        id2node = dict(zip(range(number_of_nodes), sorted(map(int, nodes))))
+    else:
+        id2node = dict(zip(range(number_of_nodes), sorted(nodes)))
+    return isnumbers, id2node, number_of_nodes
+
+
 def read_nodes_from_file(input, sep):
     nodes = set()
     with open(input, 'r') as inf:
