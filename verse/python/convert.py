@@ -71,6 +71,7 @@ def map_nodes_to_ids(nodes: set, filepath_pickle: str = None):
     else:
         node2id = dict(zip(sorted(nodes), range(number_of_nodes)))
     if filepath_pickle is not None:
+        filepath_pickle = filepath_pickle + '_nodes_to_ids.p'
         with open(filepath_pickle, 'wb') as file:
             pickle.dump(node2id, file)
     return isnumbers, node2id, number_of_nodes
@@ -85,6 +86,7 @@ def map_ids_to_nodes(nodes: set, filepath_pickle: str = None):
     else:
         id2node = dict(zip(range(number_of_nodes), sorted(nodes)))
     if filepath_pickle is not None:
+        filepath_pickle = filepath_pickle + '_ids_to_nodes.p'
         with open(filepath_pickle, 'wb') as file:
             pickle.dump(id2node, file)
     return isnumbers, id2node, number_of_nodes
@@ -162,7 +164,7 @@ def process(format, matfile_variable_name, undirected, sep, input, output, filep
 @click.option('--undirected/--directed', default=True, is_flag=True,
               help='Treat graph as undirected.')
 @click.option('--filepath_pickle', default=None,
-              help='file path to write node-to-id and id-to-node mapping dict as pickle file')
+              help='file path without file ending, where to write node-to-id + id-to-node mapping dict as pickle file')
 @click.option('--sep', default=' ', help='Separator of input file')
 @click.argument('input', type=click.Path())
 @click.argument('output', type=click.Path())
