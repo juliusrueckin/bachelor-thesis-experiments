@@ -50,6 +50,7 @@ class Experiment:
         self.results_file_path = results_file_path
         self.random_seed = random_seeds
         self.random_seeds = random_seeds
+        self.executed_runs = []
 
         assert len(self.random_seed) == self.repetitions, 'random seed array length and number of ' \
                                                           'repetitions are not equal'
@@ -119,6 +120,7 @@ class Experiment:
             })
 
             experiment = self.init_run(run_params)
+            self.executed_runs.append(experiment)
             experiments = [copy.deepcopy(experiment) for rep in range(self.repetitions)]
             pool = Pool(self.repetitions)
             results = pool.map(self.perform_single_run,
