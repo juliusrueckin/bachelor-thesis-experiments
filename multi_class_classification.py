@@ -48,7 +48,7 @@ class MultiClassClassification(Benchmark):
         self.node_labels_train = []
         self.node_labels_test = []
 
-    def make_train_test_split(self, random_seed=None):
+    def preprocess_data(self, random_seed=None):
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
             train_test_split(self.embeddings, self.node_labels, train_size=self.train_size,
                              test_size=1 - self.train_size, random_state=random_seed)

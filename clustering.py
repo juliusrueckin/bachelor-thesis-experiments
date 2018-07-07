@@ -38,7 +38,7 @@ class Clustering(Benchmark):
         self.k_means = None
         self.node_label_predictions = []
 
-    def make_train_test_split(self, random_seed=None):
+    def preprocess_data(self, random_seed=None):
         return self.embeddings, self.node_labels, self.embeddings, self.node_labels
 
     def train(self, random_seed=None):

@@ -1,6 +1,7 @@
 # import required packages
 import numpy as np
 import json
+import copy
 from multiprocessing import Pool
 
 from itertools import product
@@ -118,9 +119,10 @@ class Experiment:
             })
 
             experiment = self.init_run(run_params)
+            experiments = [copy.deepcopy(experiment) for rep in range(self.repetitions)]
             pool = Pool(self.repetitions)
             results = pool.map(self.perform_single_run,
-                               [(index, rep, run_params, experiment) for rep in range(self.repetitions)])
+                               [(index, rep, run_params, experiments[rep]) for rep in range(self.repetitions)])
             self.experiment_results['parameterizations'][index]['runs'].extend(results)
 
         print('Finished {} experiment on {} data set with {} embeddings'
@@ -136,7 +138,7 @@ class Experiment:
         index, rep, run_params, experiment = single_run_params
         random_seed = self.random_seeds[rep]
 
-        experiment.make_train_test_split(random_seed=random_seed)
+        experiment.preprocess_data(random_seed=random_seed)
         experiment.train(random_seed=random_seed)
         predictions = experiment.predict()
         evaluation = experiment.evaluate()

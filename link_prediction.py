@@ -68,21 +68,41 @@ class LinkPrediction(Benchmark):
         self.edge_embeddings_test = []
         self.edge_labels_train = []
         self.edge_labels_test = []
+        self.node2id_filepath = node2id_filepath
+        self.new_edges = new_edges
+        self.neg_edges = neg_edges
+        self.vector_operator = vector_operator
+        self.edge_list = edge_list
+        self.ignore_new_nodes = ignore_new_nodes
+        self.node2id = {}
 
-        if node2id_filepath is not None:
+        self.build_features()
+
+    def preprocess_data(self, random_seed=None):
+        self.make_train_test_split(random_seed=random_seed)
+
+        return self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test
+
+    def make_train_test_split(self, random_seed=None):
+        self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test = \
+            train_test_split(self.edge_embeddings, self.edge_labels, train_size=self.train_size,
+                             random_state=random_seed)
+
+    def build_features(self):
+        if self.node2id_filepath is not None:
             print("Use ids for nodes from node2id dict")
-            with open(node2id_filepath, 'rb') as file:
+            with open(self.node2id_filepath, 'rb') as file:
                 self.node2id = pickle.load(file)
-            if not ignore_new_nodes:
+            if not self.ignore_new_nodes:
                 # Find all nodes
                 nodes = set()
-                for edge in tqdm(new_edges):
+                for edge in tqdm(self.new_edges):
                     node1, node2 = edge
                     nodes.add(node1)
                     nodes.add(node2)
 
-                if neg_edges is not None:
-                    for edge in tqdm(neg_edges):
+                if self.neg_edges is not None:
+                    for edge in tqdm(self.neg_edges):
                         node1, node2 = edge
                         nodes.add(node1)
                         nodes.add(node2)
@@ -95,41 +115,41 @@ class LinkPrediction(Benchmark):
         else:
             print("Calculate ids for nodes")
             nodes = set()
-            for edge in tqdm(edge_list):
+            for edge in tqdm(self.edge_list):
                 node1, node2 = edge
                 nodes.add(node1)
                 nodes.add(node2)
-            if not ignore_new_nodes:
-                for edge in tqdm(new_edges):
+            if not self.ignore_new_nodes:
+                for edge in tqdm(self.new_edges):
                     node1, node2 = edge
                     nodes.add(node1)
                     nodes.add(node2)
-                if neg_edges is not None:
-                    for edge in tqdm(neg_edges):
+                if self.neg_edges is not None:
+                    for edge in tqdm(self.neg_edges):
                         node1, node2 = edge
                         nodes.add(node1)
                         nodes.add(node2)
             _, self.node2id, _ = map_nodes_to_ids(nodes)
         new_edges_converted = []
-        for edge in new_edges:
+        for edge in self.new_edges:
             node1, node2 = edge
-            if ignore_new_nodes:
+            if self.ignore_new_nodes:
                 # Filter edges with new nodes
                 if node1 not in self.node2id.keys() or node2 not in self.node2id.keys():
                     continue
             new_edges_converted.append((self.node2id[node1], self.node2id[node2]))
 
         neg_edges_converted = []
-        for edge in neg_edges:
+        for edge in self.neg_edges:
             node1, node2 = edge
-            if ignore_new_nodes:
+            if self.ignore_new_nodes:
                 # Filter edges with new nodes
                 if node1 not in self.node2id.keys() or node2 not in self.node2id.keys():
                     continue
             neg_edges_converted.append((self.node2id[node1], self.node2id[node2]))
 
         self.new_edges = new_edges_converted
-        self.vector_operator = vector_operator
+        self.vector_operator = self.vector_operator
         self.neg_edges = neg_edges_converted
 
         assert len(self.edge_labels) == 0, str(len(self.edge_labels))
@@ -146,13 +166,6 @@ class LinkPrediction(Benchmark):
             self.compute_edgewise_features(self.sample_non_existing_edges(len(self.new_edges)), 0)
         else:
             self.compute_edgewise_features(self.neg_edges, 0)
-
-    def make_train_test_split(self, random_seed=None):
-        self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test = \
-            train_test_split(self.edge_embeddings, self.edge_labels, train_size=self.train_size,
-                             random_state=random_seed)
-
-        return self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test
 
     def compute_edgewise_features(self, edges, label):
         """
