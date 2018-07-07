@@ -44,9 +44,9 @@ def is_numbers_only(nodes):
     return True
 
 
-def list2mat(input, undirected, sep):
+def list2mat(input, undirected, sep, filepath_pickle):
     nodes = read_nodes_from_file(input, sep)
-    isnumbers, node2id, number_of_nodes = map_nodes_to_ids(nodes)
+    isnumbers, node2id, number_of_nodes = map_nodes_to_ids(nodes, filepath_pickle)
     graph = build_graph(input, sep, node2id, undirected, isnumbers)
     indptr = np.zeros(number_of_nodes + 1, dtype=np.int32)
     indptr[0] = 0
@@ -142,11 +142,11 @@ def build_graph(input, sep, node2id: dict, undirected, isnumbers):
     return graph
 
 
-def process(format, matfile_variable_name, undirected, sep, input, output):
+def process(format, matfile_variable_name, undirected, sep, input, output, filepath_pickle):
     if format == "mat":
         indptr, indices = mat2xgfs(input, undirected, matfile_variable_name)
     elif format in ['edgelist', 'adjlist']:
-        indptr, indices = list2mat(input, undirected, sep)
+        indptr, indices = list2mat(input, undirected, sep, filepath_pickle)
 
     with open(output, 'wb') as fout:
         xgfs2file(fout, indptr, indices)
@@ -161,14 +161,16 @@ def process(format, matfile_variable_name, undirected, sep, input, output):
               help='variable name of adjacency matrix inside a .mat file.')
 @click.option('--undirected/--directed', default=True, is_flag=True,
               help='Treat graph as undirected.')
+@click.option('--filepath_pickle', default=None,
+              help='file path to write node-to-id and id-to-node mapping dict as pickle file')
 @click.option('--sep', default=' ', help='Separator of input file')
 @click.argument('input', type=click.Path())
 @click.argument('output', type=click.Path())
-def main(format, matfile_variable_name, undirected, sep, input, output):
+def main(format, matfile_variable_name, undirected, sep, input, output, filepath_pickle):
     logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
                         level=logging.INFO)
-    logging.info('convert graph from %s to %s', input, output)
-    process(format, matfile_variable_name, undirected, sep, input, output)
+    logging.info('convert graph from %s to %s and store mapping in {}', input, output, filepath_pickle)
+    process(format, matfile_variable_name, undirected, sep, input, output, filepath_pickle)
     logging.info('done.')
 
 
