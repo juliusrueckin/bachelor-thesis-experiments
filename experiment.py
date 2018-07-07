@@ -142,13 +142,12 @@ class Experiment:
 
         experiment.preprocess_data(random_seed=random_seed)
         experiment.train(random_seed=random_seed)
-        predictions = experiment.predict()
+        experiment.predict()
         evaluation = experiment.evaluate()
 
         run_results = {
             'run': rep + 1,
             'random_seed': self.random_seeds[rep],
-            'predictions': predictions.tolist(),
             'evaluation': evaluation
         }
 
