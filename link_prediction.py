@@ -35,8 +35,8 @@ class LinkPrediction(Benchmark):
     train_size = 0.5
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', neg_edges=None,
-                 node_embeddings=None, new_edges=None, vector_operator='hadamard', random_seed=None,
-                 node2id_filepath=None, edge_list=None, ignore_new_nodes=True):
+                 node_embeddings=None, new_edges=None, vector_operator='hadamard', node2id_filepath=None,
+                 edge_list=None, ignore_new_nodes=True):
         """
         Initialize link prediction algorithm with customized configuration parameters
         Compute edgewise features
@@ -60,11 +60,14 @@ class LinkPrediction(Benchmark):
         self.dataset_name = dataset_name
         self.performance_function = performance_function
         self.node_embeddings = node_embeddings
-        self.random_seed = random_seed
         self.edge_embeddings = np.empty(shape=(0, np.shape(self.node_embeddings)[1]))
         self.logistic_regression_model = None
         self.edge_label_predictions = []
         self.edge_labels = []
+        self.edge_embeddings_train = []
+        self.edge_embeddings_test = []
+        self.edge_labels_train = []
+        self.edge_labels_test = []
 
         if node2id_filepath is not None:
             print("Use ids for nodes from node2id dict")
@@ -144,9 +147,12 @@ class LinkPrediction(Benchmark):
         else:
             self.compute_edgewise_features(self.neg_edges, 0)
 
+    def make_train_test_split(self, random_seed=None):
         self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test = \
             train_test_split(self.edge_embeddings, self.edge_labels, train_size=self.train_size,
-                             random_state=self.random_seed)
+                             random_state=random_seed)
+
+        return self.edge_embeddings_train, self.edge_embeddings_test, self.edge_labels_train, self.edge_labels_test
 
     def compute_edgewise_features(self, edges, label):
         """
@@ -208,7 +214,7 @@ class LinkPrediction(Benchmark):
 
         return non_existing_edges
 
-    def train(self):
+    def train(self, random_seed=None):
         """
         Train through logistic regression
         :return:
@@ -220,7 +226,7 @@ class LinkPrediction(Benchmark):
 
         self.logistic_regression_model = LogisticRegression(penalty='l2', C=1., solver='saga', multi_class='ovr',
                                                             verbose=1, class_weight='balanced',
-                                                            random_state=self.random_seed, n_jobs=-1)
+                                                            random_state=random_seed, n_jobs=-1)
         self.logistic_regression_model.fit(self.edge_embeddings_train, self.edge_labels_train)
 
         end_time = time.time()

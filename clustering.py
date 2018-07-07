@@ -3,8 +3,6 @@ import time
 from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score, silhouette_score
 
-from verse.python.convert import map_ids_to_nodes
-
 from benchmark import Benchmark
 
 
@@ -16,7 +14,7 @@ class Clustering(Benchmark):
     BOTH = 'both'
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
-                 embeddings=None, node_labels=None, n_clusters=2, random_seed=None):
+                 embeddings=None, node_labels=None, n_clusters=2):
         """
         Initialize classification algorithm with customized configuration parameters
         :param method_name:
@@ -37,11 +35,13 @@ class Clustering(Benchmark):
         self.embeddings = embeddings
         self.node_labels = node_labels
         self.n_clusters = n_clusters
-        self.random_seed = random_seed
         self.k_means = None
         self.node_label_predictions = []
 
-    def train(self):
+    def make_train_test_split(self, random_seed=None):
+        return self.embeddings, self.node_labels, self.embeddings, self.node_labels
+
+    def train(self, random_seed=None):
         """
         Train clustering through k-means approach
         :return:
@@ -52,7 +52,7 @@ class Clustering(Benchmark):
         start_time = time.time()
 
         self.k_means = KMeans(n_clusters=self.n_clusters, init='k-means++', n_jobs=-1,
-                              n_init=1, random_state=self.random_seed)
+                              n_init=1, random_state=random_seed)
         self.k_means.fit(self.embeddings)
 
         end_time = time.time()

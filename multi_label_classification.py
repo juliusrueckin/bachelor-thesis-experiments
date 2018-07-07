@@ -26,8 +26,7 @@ class MultiLabelClassification(Benchmark):
     LOGISTIC_REGRESSION = 'logistic_regression'
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression',
-                 random_seed=None):
+                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression'):
         """
         Initialize classification algorithm with customized configuration parameters
         Produce random train-test split
@@ -53,15 +52,22 @@ class MultiLabelClassification(Benchmark):
         self.node_labels = MultiLabelBinarizer().fit_transform(node_labels)
         self.n_neighbors = n_neighbors
         self.chosen_classifier = classifier
-        self.random_seed = random_seed
         self.node_label_predictions = []
         self.multi_label_model = None
+        self.embeddings_train = []
+        self.embeddings_test = []
+        self.node_labels_train = []
+        self.node_labels_test = []
+        self.train_size = train_size
 
+    def make_train_test_split(self, random_seed=None):
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
-            train_test_split(self.embeddings, self.node_labels, train_size=train_size, test_size=1 - train_size,
-                             random_state=self.random_seed)
+            train_test_split(self.embeddings, self.node_labels, train_size=self.train_size,
+                             test_size=1 - self.train_size, random_state=random_seed)
 
-    def train(self):
+        return self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test
+
+    def train(self, random_seed=None):
         """
         Train through logistic regression
         :return:
@@ -78,7 +84,7 @@ class MultiLabelClassification(Benchmark):
             self.multi_label_model = \
                 OneVsRestClassifier(
                     LogisticRegression(penalty='l2', C=1., multi_class='ovr', solver='saga',verbose=1,
-                                       class_weight='balanced', random_state=self.random_seed, n_jobs=-1), n_jobs=-1)
+                                       class_weight='balanced', random_state=random_seed, n_jobs=-1), n_jobs=-1)
 
         self.multi_label_model.fit(self.embeddings_train, self.node_labels_train)
 
