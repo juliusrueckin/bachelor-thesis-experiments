@@ -148,6 +148,7 @@ class Experiment:
         run_results = {
             'run': rep + 1,
             'random_seed': self.random_seeds[rep],
+            'experiment': id(experiment),
             'evaluation': evaluation
         }
 
