@@ -47,6 +47,7 @@ def is_numbers_only(nodes):
 def list2mat(input, undirected, sep, filepath_pickle):
     nodes = read_nodes_from_file(input, sep)
     isnumbers, node2id, number_of_nodes = map_nodes_to_ids(nodes, filepath_pickle)
+    map_ids_to_nodes(nodes, filepath_pickle)
     graph = build_graph(input, sep, node2id, undirected, isnumbers)
     indptr = np.zeros(number_of_nodes + 1, dtype=np.int32)
     indptr[0] = 0
