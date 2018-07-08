@@ -2,6 +2,7 @@
 import numpy as np
 import json
 import copy
+import pickle
 from multiprocessing import Pool
 
 from itertools import product
@@ -21,7 +22,8 @@ class Experiment:
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', node_labels=[],
                  embeddings_file_path='', node_embedings=None, embedding_dimensionality=128, repetitions=10,
-                 experiment_params={}, experiment_type='clustering', results_file_path=None, random_seeds=None):
+                 experiment_params={}, experiment_type='clustering', results_file_path=None, random_seeds=None,
+                 pickle_path=None):
         """
         Initialize experiment with given configuration parameters
         :param method_name:
@@ -51,6 +53,8 @@ class Experiment:
         self.random_seed = random_seeds
         self.random_seeds = random_seeds
         self.executed_runs = []
+        self.pickle_path = pickle_path
+        self.experiment = None
 
         assert len(self.random_seed) == self.repetitions, 'random seed array length and number of ' \
                                                           'repetitions are not equal'
@@ -71,6 +75,10 @@ class Experiment:
     def generate_results_file(self):
         with open(self.results_file_path, 'w') as results_file:
             results_file.write(json.dumps(self.experiment_results, ensure_ascii=False, indent=4))
+
+    def generate_pickle_file(self):
+        with open(self.pickle_path, 'wb') as pickle_file:
+            pickle.dump(self.experiment, pickle_file)
 
     def generate_cross_product_params(self):
         cross_product_experiment_params = []
@@ -119,9 +127,9 @@ class Experiment:
                 'runs': []
             })
 
-            experiment = self.init_run(run_params)
-            self.executed_runs.append(experiment)
-            experiments = [copy.deepcopy(experiment) for rep in range(self.repetitions)]
+            self.experiment = self.init_run(run_params)
+            self.executed_runs.append(self.experiment)
+            experiments = [copy.deepcopy(self.experiment) for rep in range(self.repetitions)]
             pool = Pool(self.repetitions)
             results = pool.map(self.perform_single_run,
                                [(index, rep, run_params, experiments[rep]) for rep in range(self.repetitions)])
@@ -133,6 +141,10 @@ class Experiment:
         if self.results_file_path is not None:
             self.generate_results_file()
             print('Saved results in file {}'.format(self.results_file_path))
+
+        if self.pickle_path is not None:
+            self.generate_pickle_file()
+            print('Saved experiment as pickle-model in file {}'.format(self.pickle_path))
 
         return self.experiment_results
 
