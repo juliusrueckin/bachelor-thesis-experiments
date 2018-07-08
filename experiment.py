@@ -54,7 +54,7 @@ class Experiment:
         self.random_seeds = random_seeds
         self.executed_runs = []
         self.pickle_path = pickle_path
-        self.experiment = None
+        self.experiments = []
 
         assert len(self.random_seed) == self.repetitions, 'random seed array length and number of ' \
                                                           'repetitions are not equal'
@@ -78,7 +78,7 @@ class Experiment:
 
     def generate_pickle_file(self):
         with open(self.pickle_path, 'wb') as pickle_file:
-            pickle.dump(self.experiment, pickle_file)
+            pickle.dump(self, pickle_file)
 
     def generate_cross_product_params(self):
         cross_product_experiment_params = []
@@ -127,12 +127,12 @@ class Experiment:
                 'runs': []
             })
 
-            self.experiment = self.init_run(run_params)
-            self.executed_runs.append(self.experiment)
-            experiments = [copy.deepcopy(self.experiment) for rep in range(self.repetitions)]
+            experiment = self.init_run(run_params)
+            self.executed_runs.append(experiment)
+            self.experiments = [copy.deepcopy(experiment) for rep in range(self.repetitions)]
             pool = Pool(self.repetitions)
             results = pool.map(self.perform_single_run,
-                               [(index, rep, run_params, experiments[rep]) for rep in range(self.repetitions)])
+                               [(index, rep, run_params, self.experiments[rep]) for rep in range(self.repetitions)])
             self.experiment_results['parameterizations'][index]['runs'].extend(results)
 
         print('Finished {} experiment on {} data set with {} embeddings'
