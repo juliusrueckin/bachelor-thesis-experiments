@@ -3,9 +3,12 @@ import numpy as np
 import json
 import copy
 import pickle
-from multiprocessing import Pool
 
+from multiprocessing import Pool
 from itertools import product
+
+from telegram_bot import TelegramNotifier
+
 from multi_class_classification import MultiClassClassification
 from multi_label_classification import MultiLabelClassification
 from clustering import Clustering
@@ -23,7 +26,7 @@ class Experiment:
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', node_labels=[],
                  embeddings_file_path='', node_embedings=None, embedding_dimensionality=128, repetitions=10,
                  experiment_params={}, experiment_type='clustering', results_file_path=None, random_seeds=None,
-                 pickle_path=None):
+                 pickle_path=None, telegram_config=None):
         """
         Initialize experiment with given configuration parameters
         :param method_name:
@@ -38,6 +41,7 @@ class Experiment:
         :param experiment_type:
         :param results_file_path:
         :param random_seeds:
+        :param telegram_config
         """
         self.method_name = method_name
         self.dataset_name = dataset_name
@@ -55,6 +59,8 @@ class Experiment:
         self.executed_runs = []
         self.pickle_path = pickle_path
         self.experiments = []
+        self.telegram_config = telegram_config
+        self.telegram_notifier = None
 
         assert len(self.random_seed) == self.repetitions, 'random seed array length and number of ' \
                                                           'repetitions are not equal'
@@ -97,6 +103,15 @@ class Experiment:
         num_of_nodes = int(np.shape(embeddings_file_content)[0] / self.embedding_dimensionality)
         self.node_embeddings = embeddings_file_content.reshape((num_of_nodes, self.embedding_dimensionality))
 
+    def build_telegram_bot(self):
+        self.telegram_config["experiment"] = {}
+        self.telegram_config["experiment"]["experiment_type"] = self.experiment_type
+        self.telegram_config["experiment"]["method_name"] = self.method_name
+        self.telegram_config["experiment"]["performance_function"] = self.performance_function
+        self.telegram_config["experiment"]["dataset_name"] = self.dataset_name
+
+        self.telegram_notifier = TelegramNotifier(self.telegram_config)
+
     def init_run(self, run_params):
         if self.experiment_type == self.CLASSIFICATION:
             return MultiClassClassification(method_name=self.method_name, dataset_name=self.dataset_name,
@@ -121,19 +136,31 @@ class Experiment:
         print('Start {} experiment on {} data set with {} embeddings\nRepeated {} times and evaluated through {}'
               'performance function(s)'.format(self.experiment_type, self.dataset_name, self.method_name,
                                                self.repetitions, self.performance_function))
+
+        if self.telegram_config:
+            self.build_telegram_bot()
+
         for index, run_params in enumerate(self.experiment_params):
             self.experiment_results['parameterizations'].append({
                 'params': run_params,
                 'runs': []
             })
 
+            if self.telegram_notifier is not None:
+                self.telegram_notifier.start_experiment(run_params)
+
             experiment = self.init_run(run_params)
             self.executed_runs.append(experiment)
             self.experiments = [copy.deepcopy(experiment) for rep in range(self.repetitions)]
+
             pool = Pool(self.repetitions)
             results = pool.map(self.perform_single_run,
                                [(index, rep, run_params, self.experiments[rep]) for rep in range(self.repetitions)])
+
             self.experiment_results['parameterizations'][index]['runs'].extend(results)
+
+            if self.telegram_notifier is not None:
+                self.telegram_notifier.finish_experiment(run_params)
 
         print('Finished {} experiment on {} data set with {} embeddings'
               .format(self.experiment_type, self.dataset_name, self.method_name))
@@ -163,5 +190,8 @@ class Experiment:
             'experiment': id(experiment),
             'evaluation': evaluation
         }
+
+        if self.telegram_notifier is not None:
+            self.telegram_notifier.finished_run(run_results["evaluation"])
 
         return run_results
