@@ -26,7 +26,7 @@ class Experiment:
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', node_labels=[],
                  embeddings_file_path='', node_embedings=None, embedding_dimensionality=128, repetitions=10,
                  experiment_params={}, experiment_type='clustering', results_file_path=None, random_seeds=None,
-                 pickle_path=None, telegram_config=None):
+                 pickle_path=None, telegram_config=None, node2id_filepath=None):
         """
         Initialize experiment with given configuration parameters
         :param method_name:
@@ -61,6 +61,7 @@ class Experiment:
         self.experiments = []
         self.telegram_config = telegram_config
         self.telegram_notifier = None
+        self.node2id_filepath = node2id_filepath
 
         assert len(self.random_seed) == self.repetitions, 'random seed array length and number of ' \
                                                           'repetitions are not equal'
@@ -115,22 +116,23 @@ class Experiment:
     def init_run(self, run_params):
         if self.experiment_type == self.CLASSIFICATION:
             return MultiClassClassification(method_name=self.method_name, dataset_name=self.dataset_name,
-                                         performance_function=self.performance_function,
-                                         embeddings=self.node_embeddings,
-                                         node_labels=self.node_labels)
+                                            performance_function=self.performance_function,
+                                            embeddings=self.node_embeddings,
+                                            node_labels=self.node_labels)
         elif self.experiment_type == self.CLUSTERING:
             return Clustering(method_name=self.method_name, dataset_name=self.dataset_name,
-                           embeddings=self.node_embeddings, **run_params,
-                           performance_function=self.performance_function, node_labels=self.node_labels)
+                              embeddings=self.node_embeddings, **run_params, node_labels=self.node_labels,
+                              performance_function=self.performance_function,
+                              node2id_filepath=self.node2id_filepath)
         elif self.experiment_type == self.MULTI_LABEL_CLASSIFICATION:
             return MultiLabelClassification(method_name=self.method_name, dataset_name=self.dataset_name,
-                                         node_labels=self.node_labels, **run_params,
-                                         performance_function=self.performance_function,
-                                         embeddings=self.node_embeddings)
+                                            node_labels=self.node_labels, **run_params,
+                                            performance_function=self.performance_function,
+                                            embeddings=self.node_embeddings)
         elif self.experiment_type == self.LINK_PREDICTION:
             return LinkPrediction(method_name=self.method_name, dataset_name=self.dataset_name,
-                               node_embeddings=self.node_embeddings, **run_params,
-                               performance_function=self.performance_function)
+                                  node_embeddings=self.node_embeddings, **run_params,
+                                  performance_function=self.performance_function)
 
     def run(self):
         print('Start {} experiment on {} data set with {} embeddings\nRepeated {} times and evaluated through {}'

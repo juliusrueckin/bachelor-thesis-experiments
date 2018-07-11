@@ -1,4 +1,6 @@
 import time
+import pickle
+import numpy as np
 
 from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score, silhouette_score
@@ -14,7 +16,7 @@ class Clustering(Benchmark):
     BOTH = 'both'
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='nmi',
-                 embeddings=None, node_labels=None, n_clusters=2):
+                 embeddings=None, node_labels=None, node2id_filepath=None, n_clusters=2):
         """
         Initialize classification algorithm with customized configuration parameters
         :param method_name:
@@ -37,9 +39,22 @@ class Clustering(Benchmark):
         self.n_clusters = n_clusters
         self.k_means = None
         self.node_label_predictions = []
+        self.node2id_filepath = node2id_filepath
 
     def preprocess_data(self, random_seed=None):
+        self.convert_node_labels()
         return self.embeddings, self.node_labels, self.embeddings, self.node_labels
+
+    def convert_node_labels(self):
+        node_labels_arr = np.zeros(np.shape(self.embeddings)[0], dtype=np.int32)
+        node_to_id = {}
+        with open(self.node2id_filepath, 'rb') as node2id_file:
+            node_to_id = pickle.load(node2id_file)
+
+        for node, index in node_to_id.items():
+            node_labels_arr[index] = self.node_labels[node]
+
+        self.node_labels = node_labels_arr
 
     def train(self, random_seed=None):
         """

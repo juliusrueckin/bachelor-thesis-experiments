@@ -4,7 +4,6 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
-from typing import List
 from tqdm import tqdm
 import pickle
 
