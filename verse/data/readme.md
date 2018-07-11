@@ -2,7 +2,7 @@
 
 For space constraints, we do not include the datasets in the repository itself. Please use the following links to get the datasets used in the paper.
 
-| Datasets | \|V\|  | \|E\| | Size | Source | Link |
+| Datasets | \|V\|  | \|E\| | Size  | Source | Link |
 | --- | --- | --- | --- | --- | --- |
 | BlogCatalog | 10k | 334k | 0 | [zafarani2009] | [HOME](http://socialcomputing.asu.edu/datasets/BlogCatalog3) \| [MAT](http://leitang.net/social_dimension.html) \| [BCSR](http://tsitsul.in/pub/blogcatalog.bcsr) |
 | CoCit | 44k | 195k | 0 | [tsitsulin2018, ms2016] | [HOME](http://aka.ms/academicgraph) \| [MAT](http://tsitsul.in/pub/academic_confs.mat) \| [BCSR](http://tsitsul.in/pub/academic_confs.bcsr) |

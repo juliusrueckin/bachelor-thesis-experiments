@@ -41,7 +41,7 @@ class Experiment:
         :param experiment_type:
         :param results_file_path:
         :param random_seeds:
-        :param telegram_config
+        :param telegram_config:
         """
         self.method_name = method_name
         self.dataset_name = dataset_name

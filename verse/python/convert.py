@@ -164,7 +164,7 @@ def process(format, matfile_variable_name, undirected, sep, input, output, filep
               help='variable name of adjacency matrix inside a .mat file.')
 @click.option('--undirected/--directed', default=True, is_flag=True,
               help='Treat graph as undirected.')
-@click.option('--filepath_pickle', default=None,
+@click.option('--filepath_pickle', default='',
               help='file path without file ending, where to write node-to-id + id-to-node mapping dict as pickle file')
 @click.option('--sep', default=' ', help='Separator of input file')
 @click.argument('input', type=click.Path())
@@ -172,7 +172,7 @@ def process(format, matfile_variable_name, undirected, sep, input, output, filep
 def main(format, matfile_variable_name, undirected, sep, input, output, filepath_pickle):
     logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
                         level=logging.INFO)
-    logging.info('convert graph from %s to %s and store mapping in {}', input, output, filepath_pickle)
+    logging.info('convert graph from %s to %s and store mapping in %s', input, output, filepath_pickle)
     process(format, matfile_variable_name, undirected, sep, input, output, filepath_pickle)
     logging.info('done.')
 
