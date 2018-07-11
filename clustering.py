@@ -25,7 +25,7 @@ class Clustering(Benchmark):
         :param embeddings:
         :param node_labels:
         :param n_clusters:
-        :param random_seed:
+        :param node2id_filepath:
         """
         
         print('Initialize clustering experiment with {} on {} evaluated through {}!'

@@ -1,4 +1,6 @@
 import time
+import numpy as np
+import pickle
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
@@ -26,7 +28,8 @@ class MultiLabelClassification(Benchmark):
     LOGISTIC_REGRESSION = 'logistic_regression'
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5, classifier='logistic_regression'):
+                 train_size=0.3, embeddings=None, node_labels=None, n_neighbors=5,
+                 classifier='logistic_regression', node2id_filepath=None):
         """
         Initialize classification algorithm with customized configuration parameters
         Produce random train-test split
@@ -38,7 +41,7 @@ class MultiLabelClassification(Benchmark):
         :param node_labels:
         :param n_neighbors:
         :param classifier:
-        :param random_seed:
+        :param node2id_filepath:
         """
         
         print('Initialize multi-label classification experiment with {} on {} evaluated through {} on {}% train data!'
@@ -49,7 +52,7 @@ class MultiLabelClassification(Benchmark):
         self.performance_function = performance_function
         self.train_size = train_size
         self.embeddings = embeddings
-        self.node_labels = MultiLabelBinarizer().fit_transform(node_labels)
+        self.node_labels = node_labels
         self.n_neighbors = n_neighbors
         self.chosen_classifier = classifier
         self.node_label_predictions = []
@@ -59,13 +62,30 @@ class MultiLabelClassification(Benchmark):
         self.node_labels_train = []
         self.node_labels_test = []
         self.train_size = train_size
+        self.node2id_filepath = node2id_filepath
 
     def preprocess_data(self, random_seed=None):
+        self.convert_node_labels()
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
             train_test_split(self.embeddings, self.node_labels, train_size=self.train_size,
                              test_size=1 - self.train_size, random_state=random_seed)
 
         return self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test
+
+    def convert_node_labels(self):
+        node_labels_binarized = MultiLabelBinarizer().fit_transform(self.node_labels.values())
+        self.node_labels = dict(zip(self.node_labels.keys(), node_labels_binarized))
+
+        node_labels_arr = np.zeros(np.shape(self.embeddings)[0] * np.shape(node_labels_binarized)[1])\
+            .reshape(np.shape(self.embeddings)[0], np.shape(node_labels_binarized)[1])
+        node_to_id = {}
+        with open(self.node2id_filepath, 'rb') as node2id_file:
+            node_to_id = pickle.load(node2id_file)
+
+        for node, index in node_to_id.items():
+            node_labels_arr[index] = self.node_labels[node]
+
+        self.node_labels = node_labels_arr
 
     def train(self, random_seed=None):
         """

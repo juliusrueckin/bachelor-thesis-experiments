@@ -118,7 +118,8 @@ class Experiment:
             return MultiClassClassification(method_name=self.method_name, dataset_name=self.dataset_name,
                                             performance_function=self.performance_function,
                                             embeddings=self.node_embeddings,
-                                            node_labels=self.node_labels)
+                                            node_labels=self.node_labels,
+                                            node2id_filepath=self.node2id_filepath)
         elif self.experiment_type == self.CLUSTERING:
             return Clustering(method_name=self.method_name, dataset_name=self.dataset_name,
                               embeddings=self.node_embeddings, **run_params, node_labels=self.node_labels,
@@ -128,11 +129,13 @@ class Experiment:
             return MultiLabelClassification(method_name=self.method_name, dataset_name=self.dataset_name,
                                             node_labels=self.node_labels, **run_params,
                                             performance_function=self.performance_function,
-                                            embeddings=self.node_embeddings)
+                                            embeddings=self.node_embeddings,
+                                            node2id_filepath=self.node2id_filepath)
         elif self.experiment_type == self.LINK_PREDICTION:
             return LinkPrediction(method_name=self.method_name, dataset_name=self.dataset_name,
                                   node_embeddings=self.node_embeddings, **run_params,
-                                  performance_function=self.performance_function)
+                                  performance_function=self.performance_function,
+                                  node2id_filepath=self.node2id_filepath)
 
     def run(self):
         print('Start {} experiment on {} data set with {} embeddings\nRepeated {} times and evaluated through {}'

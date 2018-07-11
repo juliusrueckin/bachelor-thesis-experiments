@@ -1,4 +1,6 @@
 import time
+import numpy as np
+import pickle
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
@@ -19,7 +21,7 @@ class MultiClassClassification(Benchmark):
     BOTH = 'both'
 
     def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both',
-                 train_size=0.3, embeddings=None, node_labels=None):
+                 train_size=0.3, embeddings=None, node_labels=None, node2id_filepath=None):
         """
         Initialize classification algorithm with customized configuration parameters
         Produce random train-test split
@@ -29,7 +31,7 @@ class MultiClassClassification(Benchmark):
         :param train_size:
         :param embeddings:
         :param node_labels:
-        :param random_seed:
+        :param node2id_filepath:
         """
 
         print('Initialize multi-class classification experiment with {} on {} evaluated through {} on {}% train data!'
@@ -47,13 +49,26 @@ class MultiClassClassification(Benchmark):
         self.embeddings_test = []
         self.node_labels_train = []
         self.node_labels_test = []
+        self.node2id_filepath = node2id_filepath
 
     def preprocess_data(self, random_seed=None):
+        self.convert_node_labels()
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
             train_test_split(self.embeddings, self.node_labels, train_size=self.train_size,
                              test_size=1 - self.train_size, random_state=random_seed)
 
         return self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test
+
+    def convert_node_labels(self):
+        node_labels_arr = np.zeros(np.shape(self.embeddings)[0], dtype=np.int32)
+        node_to_id = {}
+        with open(self.node2id_filepath, 'rb') as node2id_file:
+            node_to_id = pickle.load(node2id_file)
+
+        for node, index in node_to_id.items():
+            node_labels_arr[index] = self.node_labels[node]
+
+        self.node_labels = node_labels_arr
 
     # train through logistic regression
     def train(self, random_seed=None):
