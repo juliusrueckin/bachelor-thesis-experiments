@@ -23,7 +23,7 @@ class Experiment:
     MULTI_LABEL_CLASSIFICATION = 'multi_label_classification'
     LINK_PREDICTION = 'link_prediction'
 
-    def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', node_labels=[],
+    def __init__(self, method_name='Verse-PPR', dataset_name='Test-Data', performance_function='both', node_labels={},
                  embeddings_file_path='', node_embedings=None, embedding_dimensionality=128, repetitions=10,
                  experiment_params={}, experiment_type='clustering', results_file_path=None, random_seeds=None,
                  pickle_path=None, telegram_config=None, node2id_filepath=None):
