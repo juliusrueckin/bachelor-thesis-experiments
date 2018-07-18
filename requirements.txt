@@ -7,3 +7,4 @@ networkx
 pandas
 pprint
 matplotlib
+python-telegram-bot
