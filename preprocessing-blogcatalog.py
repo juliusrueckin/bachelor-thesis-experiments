@@ -1,3 +1,4 @@
+
 # coding: utf-8
 
 # In[1]:
@@ -11,6 +12,7 @@ import networkx as nx
 import time
 import pickle
 import pprint
+import chardet
 from telegram import Bot
 from multiprocessing import Pool, cpu_count
 
@@ -89,7 +91,7 @@ GROUP = 'group'
 # In[10]:
 
 
-# add blogger nodes to graph
+# add blogger and group nodes to graph
 blog_catalog_graph.add_nodes_from(bloggers_df[0].tolist(), label=BLOGGER)
 print("{} nodes in graph".format(blog_catalog_graph.number_of_nodes()))
 blog_catalog_graph.add_nodes_from(groups_df[0].tolist(), label=GROUP)
@@ -145,7 +147,7 @@ print("The avg. node degree is {}".format(np.round(avg_node_degree, decimals=2))
 
 # define random walk parameters
 sim_G_sampling = {}
-samples_per_node = 100000
+samples_per_node = 10000
 finished_nodes = 0
 experiment_name = 'Blog-Catalog Node Sampling V1'
 
@@ -156,7 +158,7 @@ experiment_name = 'Blog-Catalog Node Sampling V1'
 # define meta-path scoring information
 meta_path_scheme_A = [GROUP, IS_MEMBER_OF, BLOGGER, IS_MEMBER_OF, GROUP]
 meta_path_scheme_B = [BLOGGER, IS_MEMBER_OF, GROUP, IS_MEMBER_OF, BLOGGER, IS_MEMBER_OF, GROUP]
-meta_path_schemes = {BLOGGER: [meta_path_scheme_A], GROUP: [meta_path_scheme_B]}
+meta_path_schemes = {BLOGGER: [meta_path_scheme_B], GROUP: [meta_path_scheme_A]}
 scoring_function = {}
 
 
@@ -210,9 +212,11 @@ def run_single_random_walk(start_node):
     current_node = start_node
     meta_path_scheme = sample_meta_path_scheme(start_node)
     walk_length = int((len(meta_path_scheme) - 1) / 2)
+    
     for i in range(1,walk_length+1):
         visited_nodes.append(current_node)
         transition_probabilities = compute_transition_probabilities(meta_path_scheme, i, current_node)
+        
         if np.sum(transition_probabilities) == 0:
             return visited_nodes
         current_node = np.random.choice([n for n in blog_catalog_graph.neighbors(current_node)], p=transition_probabilities)
@@ -223,7 +227,7 @@ def run_single_random_walk(start_node):
 # In[22]:
 
 
-# sample 100.000 times a similar node given particular node
+# sample 10.000 times a similar node given particular node
 def create_samples_for_node(node):
     sampled_nodes = []
     
@@ -236,14 +240,14 @@ def create_samples_for_node(node):
 # In[23]:
 
 
-# sample 100.000 similar nodes for each node in node_list in parallel
+# sample 10.000 similar nodes for each node in node_list in parallel
 nodes_list = list(blog_catalog_graph.nodes)
 start_time = time.time()
 
 with Pool(cpu_count()) as pool:
     for i, result in enumerate(pool.imap(create_samples_for_node, nodes_list, chunksize=1)):
         sim_G_sampling[nodes_list[i]] = result
-        if (i+1) % 500 == 0:
+        if (i+1) % 400 == 0:
             message = "{}: Finished {}/{} nodes".format(experiment_name,i+1,len(nodes_list))
             print(message)
             bot.send_message(chat_id=chat_id, text=message)
@@ -267,8 +271,9 @@ with open(blogcatalog_sampling_v1_file_path, 'wb') as pickle_file:
 
 
 # read dict with node-id -> similar-nodes-list from pickle file
+sim_G_sampling_reload={}
 with open(blogcatalog_sampling_v1_file_path, 'rb') as pickle_file:
-    sim_G_sampling = pickle.load(pickle_file)
+    sim_G_sampling_reload = pickle.load(pickle_file)
 
 
 # In[26]:
@@ -302,3 +307,4 @@ print("Number of bloggers with two groups: {}".format(np.sum(groups_count == 2))
 
 # calculate how many bloggers belong to more than two groups
 print("Number of bloggers with more than two groups: {}".format(np.sum(groups_count > 2)))
+
