@@ -33,6 +33,7 @@ int n_epochs = 100000;
 int n_hidden = 128;
 int n_samples = 3;
 float ppralpha = 0.85f;
+int n_node_samples_per_node = 10000;
 
 ull total_steps;
 ull step = 0;
@@ -41,6 +42,7 @@ ull nv = 0, ne = 0;
 int *offsets;
 int *edges;
 int *degrees;
+int *node_samples;
 
 float *w0;
 
@@ -122,15 +124,12 @@ inline int sample_neighbor(int node) {
   return edges[irand(offsets[node], offsets[node + 1])];
 }
 
-inline int sample_rw(int node) {
-  int n2 = node;
-  while (drand() < ppralpha) {
-    int neighbor = sample_neighbor(n2);
-    if (neighbor == -1)
-      return n2;
-    n2 = neighbor;
-  }
-  return n2;
+inline int sample_sim_g(int node) {
+  int n2_lower_index =  n_node_samples_per_node;
+  int n2_upper_index = n_node_samples_per_node * (node + 1) - 1;
+  int n2_index = irand(n2_lower_index, n2_upper_index);
+
+  return node_samples[n2_index];
 }
 
 int ArgPos(char *str, int argc, char **argv) {
@@ -183,7 +182,7 @@ void Train() {
         last_ncount = ncount;
       }
       int n1 = irand(nv);
-      int n2 = sample_rw(n1);
+      int n2 = sample_sim_g(n1);
       update(&w0[n1 * n_hidden], &w0[n2 * n_hidden], 1, nce_bias);
       for (int i = 0; i < n_samples; i++) {
         int neg = irand(nv);
@@ -196,7 +195,7 @@ void Train() {
 
 int main(int argc, char **argv) {
   int a = 0;
-  string network_file, embedding_file;
+  string network_file, embedding_file, node_samples_file_path;
   ull x = time(nullptr);
   for (int i = 0; i < 2; i++) {
     ull z = x += UINT64_C(0x9E3779B97F4A7C15);
@@ -216,6 +215,13 @@ int main(int argc, char **argv) {
     embedding_file = argv[a + 1];
   else {
     cout << "Output file not given! Aborting now.." << endl;
+    getchar();
+    return 0;
+  }
+  if ((a = ArgPos(const_cast<char *>("-node-samples-input"), argc, argv)) > 0)
+    node_samples_file_path = argv[a + 1];
+  else {
+    cout << "Node samples input file not given! Aborting now.." << endl;
     getchar();
     return 0;
   }
@@ -245,12 +251,21 @@ int main(int argc, char **argv) {
     embFile.read(reinterpret_cast<char *>(&nv), sizeof(long long));
     embFile.read(reinterpret_cast<char *>(&ne), sizeof(long long));
     offsets = static_cast<int *>(aligned_malloc((nv + 1) * sizeof(int32_t), DEFAULT_ALIGN));
-  edges = static_cast<int *>(aligned_malloc(ne * sizeof(int32_t), DEFAULT_ALIGN));
+    edges = static_cast<int *>(aligned_malloc(ne * sizeof(int32_t), DEFAULT_ALIGN));
     embFile.read(reinterpret_cast<char *>(offsets), nv * sizeof(int32_t));
     offsets[nv] = (int)ne;
     embFile.read(reinterpret_cast<char *>(edges), sizeof(int32_t) * ne);
     cout << "nv: " << nv << ", ne: " << ne << endl;
     embFile.close();
+  } else {
+    return 0;
+  }
+  ifstream nodeSamplesFile(node_samples_file_path, ios::in | ios::binary);
+  if (nodeSamplesFile.is_open()) {
+    node_samples = static_cast<int *>(aligned_malloc(nv * n_node_samples_per_node * sizeof(int32_t), DEFAULT_ALIGN));
+    nodeSamplesFile.read(reinterpret_cast<char *>(node_samples), nv * n_node_samples_per_node * sizeof(int32_t));
+    cout << "Read node samples file to data-structure" << endl;
+    nodeSamplesFile.close();
   } else {
     return 0;
   }
