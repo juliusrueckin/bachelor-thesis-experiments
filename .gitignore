@@ -10,6 +10,11 @@ verse/src/verse-neigh
 verse/src/verse-simrank
 verse/karate.embs
 
+hete_verse/python/__pycache__/
+hete_verse/src/verse-library.so
+hete_verse/src/hete_verse
+hete_verse/karate.embs
+
 deepwalk-c/src/karate.bin
 
 node2vec-c/node2vec
