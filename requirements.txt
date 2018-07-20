@@ -8,3 +8,4 @@ pandas
 pprint
 matplotlib
 python-telegram-bot
+chardet
