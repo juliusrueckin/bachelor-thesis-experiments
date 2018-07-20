@@ -125,8 +125,8 @@ inline int sample_neighbor(int node) {
 }
 
 inline int sample_sim_g(int node) {
-  int n2_lower_index =  n_node_samples_per_node;
-  int n2_upper_index = n_node_samples_per_node * (node + 1) - 1;
+  int n2_lower_index =  node * n_node_samples_per_node;
+  int n2_upper_index = (node + 1) * n_node_samples_per_node - 1;
   int n2_index = irand(n2_lower_index, n2_upper_index);
 
   return node_samples[n2_index];
@@ -265,6 +265,8 @@ int main(int argc, char **argv) {
     node_samples = static_cast<int *>(aligned_malloc(nv * n_node_samples_per_node * sizeof(int32_t), DEFAULT_ALIGN));
     nodeSamplesFile.read(reinterpret_cast<char *>(node_samples), nv * n_node_samples_per_node * sizeof(int32_t));
     cout << "Read node samples file to data-structure" << endl;
+    cout << "First node: " << node_samples[0] << " Last node: " << node_samples[nv*n_node_samples_per_node - 1] << endl;
+    cout << "Last node of second node: " << node_samples[(1 + 1) * n_node_samples_per_node - 1] << endl;
     nodeSamplesFile.close();
   } else {
     return 0;
