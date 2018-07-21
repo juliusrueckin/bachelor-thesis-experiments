@@ -26,7 +26,7 @@ print("Construct graph")
 
 EXPORT_AS_EDGE_LIST = True
 EXTRACT_SUB_GRAPH = False
-SEND_NOTIFICATIONS = False
+SEND_NOTIFICATIONS = True
 
 # initialize pretty printer
 pp = pprint.PrettyPrinter(indent=4, depth=8)
@@ -223,7 +223,7 @@ num_nodes_per_partition = int(dbis_graph.number_of_nodes() / num_node_partitions
 
 lower_partition_index = partition_id * num_nodes_per_partition
 upper_partition_index = (partition_id + 1) * num_nodes_per_partition
-nodes_list = list(dbis_graph.nodes)[lower_partition_index:upper_partition_index]
+nodes_list = ['a19399', 'p556343', 'p758877', 'c2512'] #list(dbis_graph.nodes)[lower_partition_index:upper_partition_index]
 start_time = time.time()
 
 with Pool(cpu_count()) as pool:
