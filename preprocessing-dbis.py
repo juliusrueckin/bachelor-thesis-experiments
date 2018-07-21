@@ -204,7 +204,10 @@ def run_single_random_walk(start_node):
         transition_probabilities = compute_transition_probabilities(meta_path_scheme, i, current_node)
         if np.sum(transition_probabilities) == 0:
             return current_node
-        current_node = np.random.choice([n for n in dbis_graph.neighbors(current_node)], p=transition_probabilities)
+        try:
+            current_node = np.random.choice([n for n in dbis_graph.neighbors(current_node)], p=transition_probabilities)
+        except:
+            return current_node
         
     return current_node
 
