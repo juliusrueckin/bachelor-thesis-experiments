@@ -7,7 +7,6 @@ import pickle
 import pprint
 import chardet
 import argparse
-import warnings
 from telegram import Bot
 from multiprocessing import Pool, cpu_count
 from heapq import nlargest
