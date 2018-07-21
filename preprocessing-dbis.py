@@ -181,17 +181,14 @@ def candidate_valid(node, candidate, meta_path_scheme,step):
 
 
 # compute transition probabilities for all neighborhood nodes of node i according to given meta-path
-def compute_transition_probabilities(meta_path_scheme, step, node):
+def compute_candidate_set(meta_path_scheme, step, node):
     candidate_set = list(dbis_graph[node])
-    transition_probabilities = np.ones(len(candidate_set), dtype=np.float64)
+    shrinked_candidate_set = []
     for i, candidate in enumerate(candidate_set):
-        if not candidate_valid(node, candidate, meta_path_scheme, step):
-            transition_probabilities[i] = 0
-
-    if np.sum(transition_probabilities) > 0:
-        transition_probabilities = transition_probabilities / np.sum(transition_probabilities)
+        if candidate_valid(node, candidate, meta_path_scheme, step):
+            shrinked_candidate_set.append(candidate)
     
-    return transition_probabilities
+    return shrinked_candidate_set
 
 
 # run single random walk with transition probabilities according to scoring function
@@ -201,14 +198,12 @@ def run_single_random_walk(start_node):
     nodes_in_meta_path = int((len(meta_path_scheme) + 1) / 2)
 
     for i in range(1, nodes_in_meta_path):
-        transition_probabilities = compute_transition_probabilities(meta_path_scheme, i, current_node)
-        if np.sum(transition_probabilities) == 0:
+        candidate_set = compute_candidate_set(meta_path_scheme, i, current_node)
+        if len(candidate_set) == 0:
             return current_node
-        try:
-            current_node = np.random.choice([n for n in dbis_graph.neighbors(current_node)], p=transition_probabilities)
-        except:
-            return current_node
-        
+
+        current_node = np.random.choice(candidate_set)
+
     return current_node
 
 
