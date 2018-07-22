@@ -44,20 +44,12 @@ papers_csv_path = dataset_path + 'paper.txt'
 paper_author_edges_csv_path = dataset_path + 'paper_author.txt'
 paper_conference_edges_csv_path = dataset_path + 'paper_conf.txt'
 
-#detect encodings of files
-encodings = {}
-file_paths = [authors_csv_path, conferences_csv_path, papers_csv_path, paper_author_edges_csv_path, paper_conference_edges_csv_path]
-
-for file_path in file_paths:
-    with open(file_path, 'rb') as f:
-        encodings[file_path] = (chardet.detect(f.read()))
-
 # store cvs contents in dataframe
-authors_df = pd.read_csv(authors_csv_path, sep='\t', header=None, dtype={0:str, 1:str}, encoding=encodings[authors_csv_path]["encoding"])
-conferences_df = pd.read_csv(conferences_csv_path, sep='\t', header=None, dtype={0:str, 1:str}, encoding=encodings[conferences_csv_path]["encoding"])
-papers_df = pd.read_csv(papers_csv_path, sep='     ', header=None, dtype={0:str, 1:str}, encoding=encodings[papers_csv_path]["encoding"])
-paper_author_edges_df = pd.read_csv(paper_author_edges_csv_path, sep='\t', header=None, dtype={0:str, 1:str}, encoding=encodings[paper_author_edges_csv_path]["encoding"])
-paper_conference_edges_df = pd.read_csv(paper_conference_edges_csv_path, sep='\t', header=None, dtype={0:str, 1:str}, encoding=encodings[paper_conference_edges_csv_path]["encoding"])
+authors_df = pd.read_csv(authors_csv_path, sep='\t', header=None, dtype={0:str, 1:str}, encoding='ISO-8859-1')
+conferences_df = pd.read_csv(conferences_csv_path, sep='\t', header=None, dtype={0:str, 1:str}, encoding='ISO-8859-1')
+papers_df = pd.read_csv(papers_csv_path, sep='     ', header=None, dtype={0:str, 1:str}, encoding='ISO-8859-1')
+paper_author_edges_df = pd.read_csv(paper_author_edges_csv_path, sep='\t', header=None, dtype={0:str, 1:str}, encoding='ascii')
+paper_conference_edges_df = pd.read_csv(paper_conference_edges_csv_path, sep='\t', header=None, dtype={0:str, 1:str}, encoding='ascii')
 
 # give authors, papers and conferences unique node-ids
 authors_df[0] = 'a' + authors_df[0]
