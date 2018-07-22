@@ -118,6 +118,11 @@ for i in range(lower_index, upper_index):
         except:
             print("Failed sending message!")
 
+        # save dict with paper-index -> citation count as pickle file
+        dbis_paper_citation_count_path = dataset_path + 'paper_{}_to_{}_cite_count.p'.format(lower_index, upper_index)
+        with open(dbis_paper_citation_count_path, 'wb') as pickle_file:
+            pickle.dump(papers_citations_count, pickle_file)
+
     paper_title = papers_df.loc[i, 1].strip()[:-1]
     papers_citations_count[i] = crawl_scholar_paper(paper_title)
 
