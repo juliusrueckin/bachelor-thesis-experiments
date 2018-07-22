@@ -15,15 +15,15 @@ lower_index = 0
 upper_index = 10000
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--lower_index", required=True, type=int, help="Specify lower partition index")
-    parser.add_argument("--upper_index", required=True, type=int, help="Specify upper partition index")
-    args = parser.parse_args()
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--lower_index", required=True, type=int, help="Specify lower partition index")
+	parser.add_argument("--upper_index", required=True, type=int, help="Specify upper partition index")
+	args = parser.parse_args()
 
-    lower_index = args.lower_index
-    upper_index = args.upper_index
-    print("Crawl google scholar papers from index {} to {}".format(lower_index, upper_index))
-    print("Construct Graph")
+	lower_index = args.lower_index
+	upper_index = args.upper_index
+	print("Crawl google scholar papers from index {} to {}".format(lower_index, upper_index))
+	print("Construct Graph")
 
 # ignore warnings
 warnings.simplefilter("ignore")
@@ -94,13 +94,14 @@ print("{} nodes in graph".format(dbis_graph.number_of_nodes()))
 
 
 def crawl_scholar_paper(paper_title):
-    cited_by = -1
-    result = next(scholarly.search_pubs_query(paper_title))
+	cited_by = -1
+	result = next(scholarly.search_pubs_query(paper_title), None)
 
-    if hasattr(result, 'citedby'):
-        cited_by = result.citedby
+	if result is not None:
+		if hasattr(result, 'citedby'):
+			cited_by = result.citedby
 
-    return cited_by
+	return cited_by
 
 
 papers_citations_count = {}
@@ -109,13 +110,13 @@ start_time = time.time()
 print("Start crawling...")
 
 for i in range(lower_index, upper_index):
-    if i % 100 == 0:
-        message = "From {} to {}: Already crawled {} papers ".format(lower_index, upper_index, i + 1)
-        print(message)
-        bot.send_message(chat_id=chat_id, text=message)
+	if i % 100 == 0:
+		message = "From {} to {}: Already crawled {} papers ".format(lower_index, upper_index, i + 1)
+		print(message)
+		bot.send_message(chat_id=chat_id, text=message)
 
-    paper_title = papers_df.loc[i, 1].strip()[:-1]
-    papers_citations_count[i] = crawl_scholar_paper(paper_title)
+	paper_title = papers_df.loc[i, 1].strip()[:-1]
+	papers_citations_count[i] = crawl_scholar_paper(paper_title)
 
 end_time = time.time()
 crawl_duration = round(end_time - start_time, 2)
@@ -129,4 +130,4 @@ bot.send_message(chat_id=chat_id, text=message)
 # save dict with paper-index -> citation count as pickle file
 dbis_paper_citation_count_path = dataset_path + 'paper_{}_to_{}_cite_count.p'.format(lower_index, upper_index)
 with open(dbis_paper_citation_count_path, 'wb') as pickle_file:
-    pickle.dump(papers_citations_count, pickle_file)
+	pickle.dump(papers_citations_count, pickle_file)
