@@ -248,7 +248,29 @@ try:
 except:
     print("Failed sending message!")
 
-# save dict with node-id -> similar-nodes-list as pickle file
+# load id-to-node mapping of verse embeddings
+id2node_filepath = dataset_path + 'dbis_mapping_ids_to_nodes.p'
+id_2_node = {}
+with open(id2node_filepath, 'rb') as id_2_node_file:
+    id_2_node = pickle.load(id_2_node_file)
+
+# load node-to-id mapping of verse embeddings
+node2id_filepath = dataset_path + 'dbis_mapping_nodes_to_ids.p'
+node_2_id = {}
+with open(node2id_filepath, 'rb') as node_2_id_file:
+    node_2_id = pickle.load(node_2_id_file)
+
+# build nodes x samples_per_node node index matrix for verse c++-implementation
+node_samples_dict = {}
+for i in range(lower_partition_index, upper_partition_index):
+    node = id_2_node[i]
+    sampled_nodes = sim_G_sampling[node]
+    sampled_node_indices = []
+    for n in sim_G_sampling[node]:
+        sampled_node_indices.append(node_2_id[n])
+    node_samples_dict[i] = sampled_node_indices
+
+# save dict with node-index -> similar-nodes-list as pickle file
 dbis_sampling_v1_file_path = dataset_path + 'dbis_sampling_v1_partition_{}.p'.format(partition_id)
 with open(dbis_sampling_v1_file_path, 'wb') as pickle_file:
     pickle.dump(sim_G_sampling, pickle_file)
