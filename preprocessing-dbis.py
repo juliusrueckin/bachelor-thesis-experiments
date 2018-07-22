@@ -218,7 +218,7 @@ def create_samples_for_node(node):
 
 
 # sample 10.000 similar nodes for each node in node_list in parallel
-num_node_partitions = 5
+num_node_partitions = 33515
 num_nodes_per_partition = int(dbis_graph.number_of_nodes() / num_node_partitions)
 
 lower_partition_index = partition_id * num_nodes_per_partition
@@ -262,13 +262,13 @@ with open(node2id_filepath, 'rb') as node_2_id_file:
 
 # build nodes x samples_per_node node index matrix for verse c++-implementation
 node_samples_dict = {}
-for i in range(lower_partition_index, upper_partition_index):
-    node = id_2_node[i]
+for node in sim_G_sampling.keys():
+    node_id = node_2_id[node]
     sampled_nodes = sim_G_sampling[node]
     sampled_node_indices = []
     for n in sim_G_sampling[node]:
         sampled_node_indices.append(node_2_id[n])
-    node_samples_dict[i] = sampled_node_indices
+    node_samples_dict[node_id] = sampled_node_indices
 
 # save dict with node-index -> similar-nodes-list as pickle file
 dbis_sampling_v1_file_path = dataset_path + 'dbis_sampling_v1_partition_{}.p'.format(partition_id)
