@@ -218,7 +218,7 @@ def create_samples_for_node(node):
 
 
 # sample 10.000 similar nodes for each node in node_list in parallel
-num_node_partitions = 33515
+num_node_partitions = 5
 num_nodes_per_partition = int(dbis_graph.number_of_nodes() / num_node_partitions)
 
 lower_partition_index = partition_id * num_nodes_per_partition
