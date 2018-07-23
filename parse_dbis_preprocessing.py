@@ -4,6 +4,12 @@ import networkx as nx
 import pandas as pd
 import chardet
 from struct import pack
+from telegram import Bot
+
+# initialize telegram bot
+token = "350553078:AAEu70JDqMFcG_x5eBD3nqccTvc4aFNMKkg"
+chat_id = "126551968"
+bot = Bot(token)
 
 dataset_path = 'data/net_dbis/'
 samples_per_node = 10000
@@ -97,7 +103,13 @@ node_samples_arr = []
 nodes_list = list(dbis_graph.nodes)
 
 for partition_id in range(num_node_partitions):
-	print("Start parsing partition {}".format(partition_id))
+	message = "Start parsing dbis partition {}".format(partition_id)
+	print(message)
+	try:
+		bot.send_message(chat_id=chat_id, text=message)
+	except:
+		print("Failed sending message!")
+
 	dbis_partition_sampling_v1_file_path = dbis_sampling_v1_file_path.format(partition_id)
 
 	with open(dbis_partition_sampling_v1_file_path, 'rb') as pickle_file:
@@ -108,6 +120,12 @@ for partition_id in range(num_node_partitions):
 	node_samples_arr.extend(flatten_node_partition_sample_values)
 
 print("Finished building verse data structure")
+
+try:
+	bot.send_message(chat_id=chat_id, text="DBIS-Parsing: Start writing to file")
+except:
+	print("Failed sending message!")
+
 print("Start writing to file")
 
 # write node index sample matrix to file
@@ -117,3 +135,8 @@ with open(node_index_samples_file_path, 'wb') as node_index_samples_file:
 
 print("Finished writing to file")
 print("Finished paring")
+
+try:
+	bot.send_message(chat_id=chat_id, text="DBIS-Parsing: Finished parsing")
+except:
+	print("Failed sending message!")
