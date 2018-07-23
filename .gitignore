@@ -32,3 +32,4 @@ metapath2vec/metapath2vec
 results/
 
 slurm-*.out
+data/net_dbis/dbis_sampling_v1_partition_*.p
