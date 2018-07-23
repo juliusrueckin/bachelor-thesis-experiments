@@ -21,20 +21,20 @@ encodings = {}
 file_paths = [authors_csv_path, conferences_csv_path, papers_csv_path, paper_author_edges_csv_path, paper_conference_edges_csv_path]
 
 for file_path in file_paths:
-    with open(file_path, 'rb') as f:
-        encodings[file_path] = (chardet.detect(f.read()))
+	with open(file_path, 'rb') as f:
+		encodings[file_path] = (chardet.detect(f.read()))
 
 # store cvs contents in data frame
 authors_df = pd.read_csv(authors_csv_path, sep='\t', header=None, dtype={0: str, 1: str},
-                         encoding=encodings[authors_csv_path]["encoding"])
+						 encoding=encodings[authors_csv_path]["encoding"])
 conferences_df = pd.read_csv(conferences_csv_path, sep='\t', header=None, dtype={0: str, 1: str},
-                             encoding=encodings[conferences_csv_path]["encoding"])
+							 encoding=encodings[conferences_csv_path]["encoding"])
 papers_df = pd.read_csv(papers_csv_path, sep='     ', header=None, dtype={0: str, 1: str},
-                        encoding=encodings[papers_csv_path]["encoding"])
+						encoding=encodings[papers_csv_path]["encoding"])
 paper_author_edges_df = pd.read_csv(paper_author_edges_csv_path, sep='\t', header=None, dtype={0: str, 1: str},
-                                    encoding=encodings[paper_author_edges_csv_path]["encoding"])
+									encoding=encodings[paper_author_edges_csv_path]["encoding"])
 paper_conference_edges_df = pd.read_csv(paper_conference_edges_csv_path, sep='\t', header=None, dtype={0: str, 1: str},
-                                        encoding=encodings[paper_conference_edges_csv_path]["encoding"])
+										encoding=encodings[paper_conference_edges_csv_path]["encoding"])
 
 # give authors, papers and conferences unique node-ids
 authors_df[0] = 'a' + authors_df[0]
@@ -77,47 +77,34 @@ dbis_graph.add_edges_from(paper_author_edges, label=WRITTEN_BY)
 print("{} edges in graph".format(dbis_graph.number_of_edges()))
 print("{} nodes in graph".format(dbis_graph.number_of_nodes()))
 
-# sample 10.000 similar nodes for each node in node_list in parallel
-num_node_partitions = 5
-num_nodes_per_partition = int(dbis_graph.number_of_nodes() / num_node_partitions)
-sim_G_sampling_reload_list = []
-sim_G_sampling_reload = {}
-
-for partition_id in range(1, num_node_partitions+1):
-	dbis_sampling_v1_file_path = dataset_path + 'dbis_sampling_v1_partition_{}.p'.format(partition_id)
-
-	# read dict with node-id -> similar-nodes-list from pickle file
-	with open(dbis_sampling_v1_file_path, 'rb') as pickle_file:
-		sim_G_sampling_reload_list.append(pickle.load(pickle_file))
-
-# merge partial sim_G_sampling dicts to one dict
-for partial_sim_G_sampling in sim_G_sampling_reload_list:
-	sim_G_sampling_reload.update(partial_sim_G_sampling)
-
 # load id-to-node mapping of verse embeddings
 id2node_filepath = dataset_path + 'dbis_mapping_ids_to_nodes.p'
-id_2_node = {}
 with open(id2node_filepath, 'rb') as id_2_node_file:
-    id_2_node = pickle.load(id_2_node_file)
+	id_2_node = pickle.load(id_2_node_file)
 
 # load node-to-id mapping of verse embeddings
 node2id_filepath = dataset_path + 'dbis_mapping_nodes_to_ids.p'
-node_2_id = {}
 with open(node2id_filepath, 'rb') as node_2_id_file:
-    node_2_id = pickle.load(node_2_id_file)
+	node_2_id = pickle.load(node_2_id_file)
 
 # build nodes x samples_per_node node index matrix for verse c++-implementation
+num_node_partitions = 5
+num_nodes_per_partition = int(dbis_graph.number_of_nodes() / num_node_partitions)
+dbis_sampling_v1_file_path = dataset_path + 'dbis_sampling_v1_partition_{}.p'
 node_samples_arr = []
 nodes_list = list(dbis_graph.nodes)
-for i in range((len(nodes_list))):
-    node = id_2_node[i]
-    sampled_nodes = sim_G_sampling_reload[node]
-    sampled_node_indices = []
-    for n in sim_G_sampling_reload[node]:
-        sampled_node_indices.append(node_2_id[n])
-    node_samples_arr.extend(sampled_node_indices)
+
+for partition_id in range(num_node_partitions):
+	dbis_partition_sampling_v1_file_path = dbis_sampling_v1_file_path.format(partition_id)
+
+	with open(dbis_partition_sampling_v1_file_path, 'rb') as pickle_file:
+		node_partition_sample_dict = pickle.load(pickle_file)
+
+	node_partition_sample_values = list(node_partition_sample_dict.values())
+	flatten_node_partition_sample_values = [node for node_list in node_partition_sample_values for node in node_list]
+	node_samples_arr.extend(flatten_node_partition_sample_values)
 
 # write node index sample matrix to file
 node_index_samples_file_path = dataset_path + 'node_index_samples_dbis_v1.smp'
 with open(node_index_samples_file_path, 'wb') as node_index_samples_file:
-    node_index_samples_file.write(pack('%di' % len(nodes_list)*samples_per_node, *node_samples_arr))
+	node_index_samples_file.write(pack('%di' % len(nodes_list)*samples_per_node, *node_samples_arr))
