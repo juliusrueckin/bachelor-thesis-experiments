@@ -16,6 +16,8 @@ papers_csv_path = dataset_path + 'paper.txt'
 paper_author_edges_csv_path = dataset_path + 'paper_author.txt'
 paper_conference_edges_csv_path = dataset_path + 'paper_conf.txt'
 
+print("Construct graph")
+
 # detect encodings of files
 encodings = {}
 file_paths = [authors_csv_path, conferences_csv_path, papers_csv_path, paper_author_edges_csv_path, paper_conference_edges_csv_path]
@@ -95,6 +97,7 @@ node_samples_arr = []
 nodes_list = list(dbis_graph.nodes)
 
 for partition_id in range(num_node_partitions):
+	print("Start parsing partition {}".format(partition_id))
 	dbis_partition_sampling_v1_file_path = dbis_sampling_v1_file_path.format(partition_id)
 
 	with open(dbis_partition_sampling_v1_file_path, 'rb') as pickle_file:
@@ -104,7 +107,13 @@ for partition_id in range(num_node_partitions):
 	flatten_node_partition_sample_values = [node for node_list in node_partition_sample_values for node in node_list]
 	node_samples_arr.extend(flatten_node_partition_sample_values)
 
+print("Finished building verse data structure")
+print("Start writing to file")
+
 # write node index sample matrix to file
 node_index_samples_file_path = dataset_path + 'node_index_samples_dbis_v1.smp'
 with open(node_index_samples_file_path, 'wb') as node_index_samples_file:
 	node_index_samples_file.write(pack('%di' % len(nodes_list)*samples_per_node, *node_samples_arr))
+
+print("Finished writing to file")
+print("Finished paring")
