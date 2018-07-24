@@ -148,7 +148,7 @@ num_nodes_per_partition = int(coauthor_graph.number_of_nodes() / num_node_partit
 
 lower_partition_index = partition_id * num_nodes_per_partition
 upper_partition_index = (partition_id + 1) * num_nodes_per_partition
-nodes_list = list(coauthor_graph.nodes)[lower_partition_index:upper_partition_index]
+nodes_list = sorted(list(coauthor_graph.nodes))[lower_partition_index:upper_partition_index]
 message = "Compute from node {}|{} to {}|{}".format(lower_partition_index, nodes_list[0], upper_partition_index-1,
 													nodes_list[-1])
 print(message)
@@ -157,7 +157,7 @@ try:
 		bot.send_message(chat_id=chat_id, text=message)
 except:
 	print("Failed sending message!")
-	
+
 start_time = time.time()
 
 with Pool(cpu_count()) as pool:
