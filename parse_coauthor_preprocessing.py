@@ -106,7 +106,7 @@ for partition_id in range(num_node_partitions):
 		message = "Length of partition dict: {}\n".format(len(sim_G_partition_sampling_reload.keys()))
 		message += "First node of partition: {}\n".format(list(sim_G_partition_sampling_reload.keys())[0])
 		message += "Last node of partition: {}\n".format(list(sim_G_partition_sampling_reload.keys())[-1])
-		sim_G_sampling_reload.update(sim_G_partition_sampling_reload)
+		sim_G_sampling_reload = {**sim_G_sampling_reload, **sim_G_partition_sampling_reload}
 		message += "Length of dict: {}\n".format(len(sim_G_sampling_reload.keys()))
 		message += "Next first node of dict: {}\n".format(list(sim_G_sampling_reload.keys())[partition_id*num_nodes_per_partition])
 		message += "Last node of dict: {}\n".format(list(sim_G_sampling_reload.keys())[-1])
