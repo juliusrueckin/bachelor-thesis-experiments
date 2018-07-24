@@ -7,16 +7,12 @@ from struct import pack
 print("Construct graph")
 
 dataset_path = 'data/coauthor/'
-coauthor_crawled_data_file_path = dataset_path + 'coauthor_json.p'
 SEND_NOTIFICATIONS = True
 
 # initialize telegram bot
 token = "350553078:AAEu70JDqMFcG_x5eBD3nqccTvc4aFNMKkg"
 chat_id = "126551968"
 bot = Bot(token)
-
-with open(coauthor_crawled_data_file_path, 'rb') as pickle_file:
-	coauthor_data = pickle.load(pickle_file)
 
 # define research fields and years of interest for us
 fields_of_studies = ['Machine learning']
