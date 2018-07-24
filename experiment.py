@@ -117,7 +117,7 @@ class Experiment:
         if self.experiment_type == self.CLASSIFICATION:
             return MultiClassClassification(method_name=self.method_name, dataset_name=self.dataset_name,
                                             performance_function=self.performance_function,
-                                            embeddings=self.node_embeddings,
+                                            embeddings=self.node_embeddings, **run_params,
                                             node_labels=self.node_labels,
                                             node2id_filepath=self.node2id_filepath)
         elif self.experiment_type == self.CLUSTERING:
@@ -152,7 +152,10 @@ class Experiment:
             })
 
             if self.telegram_notifier is not None:
-                self.telegram_notifier.start_experiment(run_params)
+                try:
+                    self.telegram_notifier.start_experiment(run_params)
+                except:
+                    print("Failed sending message")
 
             experiment = self.init_run(run_params)
             self.executed_runs.append(experiment)
@@ -165,7 +168,10 @@ class Experiment:
             self.experiment_results['parameterizations'][index]['runs'].extend(results)
 
             if self.telegram_notifier is not None:
-                self.telegram_notifier.finish_experiment(run_params)
+                try:
+                    self.telegram_notifier.finish_experiment(run_params)
+                except:
+                    print("Failed sending message")
 
         print('Finished {} experiment on {} data set with {} embeddings'
               .format(self.experiment_type, self.dataset_name, self.method_name))
@@ -197,6 +203,9 @@ class Experiment:
         }
 
         if self.telegram_notifier is not None:
-            self.telegram_notifier.finished_run(run_results["evaluation"])
+            try:
+                self.telegram_notifier.finished_run(run_results["evaluation"])
+            except:
+                print("Failed sending message")
 
         return run_results

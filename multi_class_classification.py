@@ -52,7 +52,9 @@ class MultiClassClassification(Benchmark):
         self.node2id_filepath = node2id_filepath
 
     def preprocess_data(self, random_seed=None):
-        self.convert_node_labels()
+        if self.node2id_filepath is not None:
+            self.convert_node_labels()
+            
         self.embeddings_train, self.embeddings_test, self.node_labels_train, self.node_labels_test = \
             train_test_split(self.embeddings, self.node_labels, train_size=self.train_size,
                              test_size=1 - self.train_size, random_state=random_seed)

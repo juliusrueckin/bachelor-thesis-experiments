@@ -20,7 +20,7 @@ with open(coauthor_crawled_data_file_path, 'rb') as pickle_file:
 	coauthor_data = pickle.load(pickle_file)
 
 # define research fields and years of interest for us
-fields_of_studies = ['Machine learning', 'Data mining']
+fields_of_studies = ['Machine learning']
 years = [2013, 2014, 2015, 2016]
 
 # extract top 5 conferences per field of research

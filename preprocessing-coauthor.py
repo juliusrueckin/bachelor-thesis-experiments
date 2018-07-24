@@ -23,7 +23,7 @@ print("Construct graph")
 
 dataset_path = 'data/coauthor/'
 coauthor_crawled_data_file_path = dataset_path + 'coauthor_json.p'
-EXPORT_AS_EDGE_LIST = True
+EXPORT_AS_EDGE_LIST = False
 SEND_NOTIFICATIONS = True
 
 # initialize telegram bot
@@ -35,7 +35,7 @@ with open(coauthor_crawled_data_file_path, 'rb') as pickle_file:
     coauthor_data = pickle.load(pickle_file)
 
 # define research fields and years of interest for us
-fields_of_studies = ['Machine learning', 'Data mining']
+fields_of_studies = ['Machine learning']
 years = [2013, 2014, 2015, 2016]
 
 # extract top 5 conferences per field of research
@@ -175,7 +175,7 @@ def create_samples_for_node(node):
 
 
 # sample 10.000 similar nodes for each node in node_list in parallel
-num_node_partitions = 7724
+num_node_partitions = 4
 num_nodes_per_partition = int(coauthor_graph.number_of_nodes() / num_node_partitions)
 
 lower_partition_index = partition_id * num_nodes_per_partition
