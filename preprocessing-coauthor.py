@@ -175,12 +175,14 @@ def create_samples_for_node(node):
 
 
 # sample 10.000 similar nodes for each node in node_list in parallel
-num_node_partitions = 4
+num_node_partitions = 7724
 num_nodes_per_partition = int(coauthor_graph.number_of_nodes() / num_node_partitions)
 
 lower_partition_index = partition_id * num_nodes_per_partition
 upper_partition_index = (partition_id + 1) * num_nodes_per_partition
 nodes_list = list(coauthor_graph.nodes)[lower_partition_index:upper_partition_index]
+print("Compute from node {}|{} to {}|{}".format(lower_partition_index, nodes_list[0],
+                                                upper_partition_index-1, nodes_list[lower_partition_index-1]))
 start_time = time.time()
 
 with Pool(cpu_count()) as pool:

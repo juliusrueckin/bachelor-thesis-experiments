@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import networkx as nx
 import pickle
 from telegram import Bot
@@ -9,7 +8,7 @@ print("Construct graph")
 
 dataset_path = 'data/coauthor/'
 coauthor_crawled_data_file_path = dataset_path + 'coauthor_json.p'
-EXPORT_AS_EDGE_LIST = True
+EXPORT_AS_EDGE_LIST = False
 SEND_NOTIFICATIONS = True
 
 # initialize telegram bot
@@ -58,8 +57,7 @@ for field_of_study in coauthor_data.keys():
 			for i, paper in enumerate(coauthor_data[field_of_study][conference][year]):
 				for referenced_paper_id in paper['RId']:
 					if 'P' + str(referenced_paper_id) in coauthor_graph:
-						coauthor_graph.add_edge('P' + str(paper['Id']), 'P' + str(referenced_paper_id),
-												label=REFERENCES)
+						coauthor_graph.add_edge('P' + str(paper['Id']), 'P' + str(referenced_paper_id), label=REFERENCES)
 				for author in coauthor_data[field_of_study][conference][year][i]['authors']:
 					coauthor_graph.add_edge('P' + str(paper['Id']), 'A' + str(author), label=WRITTEN_BY)
 					for co_author in coauthor_data[field_of_study][conference][year][i]['authors']:
@@ -91,6 +89,7 @@ with open(node2id_filepath, 'rb') as node_2_id_file:
 
 # read dict with node-id -> similar-nodes-list from pickle file
 num_node_partitions = 4
+num_nodes_per_partition = int(coauthor_graph.number_of_nodes() / num_node_partitions)
 sim_G_sampling_reload = {}
 for partition_id in range(num_node_partitions):
 	message = "Coauthor parsing: Load partition {}".format(partition_id)
@@ -104,7 +103,19 @@ for partition_id in range(num_node_partitions):
 	coauthor_partition_sampling_v1_file_path = dataset_path + 'coauthor_sampling_v1_partition_{}.p'.format(partition_id)
 	with open(coauthor_partition_sampling_v1_file_path, 'rb') as pickle_file:
 		sim_G_partition_sampling_reload = pickle.load(pickle_file)
+		message = "Length of partition dict: {}\n".format(len(sim_G_partition_sampling_reload.keys()))
+		message += "First node of partition: {}\n".format(list(sim_G_partition_sampling_reload.keys())[0])
+		message += "Last node of partition: {}\n".format(list(sim_G_partition_sampling_reload.keys())[-1])
 		sim_G_sampling_reload.update(sim_G_partition_sampling_reload)
+		message += "Length of dict: {}\n".format(len(sim_G_sampling_reload.keys()))
+		message += "Next first node of dict: {}\n".format(list(sim_G_sampling_reload.keys())[partition_id*num_nodes_per_partition])
+		message += "Last node of dict: {}\n".format(list(sim_G_sampling_reload.keys())[-1])
+		print(message)
+		try:
+			if SEND_NOTIFICATIONS:
+				bot.send_message(chat_id=chat_id, text=message)
+		except:
+			print("Failed sending message!")
 
 message = "Build node index matrix for verse"
 print(message)
