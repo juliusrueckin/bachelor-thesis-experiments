@@ -379,7 +379,7 @@ void TrainLINE() {
 	}
 	printf("--------------------------------\n");
 	printf("Order: %d\n", order);
-	printf("Samples: %lldM\n", total_samples / 1000000);
+	printf("Samples: %lld\n", total_samples);
 	printf("Negative: %d\n", num_negative);
 	printf("Dimension: %d\n", dim);
 	printf("Initial rho: %lf\n", init_rho);
@@ -457,7 +457,7 @@ int main(int argc, char **argv) {
 	if ((i = ArgPos((char *)"-samples", argc, argv)) > 0) total_samples = atoi(argv[i + 1]);
 	if ((i = ArgPos((char *)"-rho", argc, argv)) > 0) init_rho = atof(argv[i + 1]);
 	if ((i = ArgPos((char *)"-threads", argc, argv)) > 0) num_threads = atoi(argv[i + 1]);
-	total_samples *= 1000000;
+
 	rho = init_rho;
 	vertex = (struct ClassVertex *)calloc(max_num_vertices, sizeof(struct ClassVertex));
 	TrainLINE();
