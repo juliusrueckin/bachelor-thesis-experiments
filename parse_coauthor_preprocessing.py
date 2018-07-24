@@ -18,11 +18,6 @@ bot = Bot(token)
 fields_of_studies = ['Machine learning']
 years = [2013, 2014, 2015, 2016]
 
-# extract top 5 conferences per field of research
-top_5_conf_series_per_field = {}
-for field_of_study in fields_of_studies:
-	top_5_conf_series_per_field[field_of_study] = coauthor_data[field_of_study]
-
 # define networkx graph
 with open(dataset_path + 'coauthor_networkx.p', 'rb') as pickle_file:
 	coauthor_graph = pickle.load(pickle_file)
