@@ -8,7 +8,6 @@ print("Construct graph")
 
 dataset_path = 'data/coauthor/'
 coauthor_crawled_data_file_path = dataset_path + 'coauthor_json.p'
-EXPORT_AS_EDGE_LIST = False
 SEND_NOTIFICATIONS = True
 
 # initialize telegram bot
@@ -29,7 +28,8 @@ for field_of_study in fields_of_studies:
 	top_5_conf_series_per_field[field_of_study] = coauthor_data[field_of_study]
 
 # define networkx graph
-coauthor_graph = nx.Graph()
+with open(dataset_path + 'coauthor_networkx.p', 'rb') as pickle_file:
+	coauthor_graph = pickle.load(pickle_file)
 
 # define node and edge label constants
 AUTHOR = 'author'
@@ -38,39 +38,8 @@ CO_AUTHOR = 'co_author_of'
 REFERENCES = 'references'
 WRITTEN_BY = 'written_by'
 
-# add authors and papers
-for field_of_study in coauthor_data.keys():
-	for conference in coauthor_data[field_of_study].keys():
-		for year in coauthor_data[field_of_study][conference].keys():
-			for i, paper in enumerate(coauthor_data[field_of_study][conference][year]):
-				coauthor_graph.add_node('P' + str(paper['Id']), num_citations=paper['CC'], num_references=len(paper['RId']),
-										conference=conference, field_of_study=field_of_study, label=PAPER)
-				for author in coauthor_data[field_of_study][conference][year][i]['authors']:
-					coauthor_graph.add_node('A' + str(author), label=AUTHOR)
-
-print("{} author and paper nodes in graph".format(coauthor_graph.number_of_nodes()))
-
-# add co-author, written_by and reference edge
-for field_of_study in coauthor_data.keys():
-	for conference in coauthor_data[field_of_study].keys():
-		for year in coauthor_data[field_of_study][conference].keys():
-			for i, paper in enumerate(coauthor_data[field_of_study][conference][year]):
-				for referenced_paper_id in paper['RId']:
-					if 'P' + str(referenced_paper_id) in coauthor_graph:
-						coauthor_graph.add_edge('P' + str(paper['Id']), 'P' + str(referenced_paper_id), label=REFERENCES)
-				for author in coauthor_data[field_of_study][conference][year][i]['authors']:
-					coauthor_graph.add_edge('P' + str(paper['Id']), 'A' + str(author), label=WRITTEN_BY)
-					for co_author in coauthor_data[field_of_study][conference][year][i]['authors']:
-						if author != co_author:
-							coauthor_graph.add_edge('A' + str(author), 'A' + str(co_author), label=CO_AUTHOR)
-
 print("{} nodes in graph".format(coauthor_graph.number_of_nodes()))
 print("{} edges in graph".format(coauthor_graph.number_of_edges()))
-
-# export graph as edge list to given path
-if EXPORT_AS_EDGE_LIST:
-	edge_list_export_path = dataset_path + 'coauthor_edgelist.csv'
-	nx.write_edgelist(coauthor_graph, edge_list_export_path, data=False)
 
 # compute average degree of all nodes in graph
 node_degrees = np.array(list(dict(coauthor_graph.degree(list(coauthor_graph.nodes))).values()),dtype=np.int64)
@@ -126,7 +95,7 @@ except:
 	print("Failed sending message!")
 
 # build nodes x samples_per_node node index matrix for verse c++-implementation
-nodes_list = list(coauthor_graph.nodes)
+nodes_list = sorted(list(coauthor_graph.nodes))
 node_samples_arr = []
 for i in range((len(nodes_list))):
 	node = id_2_node[i]
