@@ -124,7 +124,22 @@ inline int sample_neighbor(int node) {
   return edges[irand(offsets[node], offsets[node + 1])];
 }
 
+inline int sample_rw(int node) {
+  int n2 = node;
+  while (drand() < ppralpha) {
+    int neighbor = sample_neighbor(n2);
+    if (neighbor == -1)
+      return n2;
+    n2 = neighbor;
+  }
+  return n2;
+}
+
 inline int sample_sim_g(int node) {
+  if(irand(1, 2) > 2){
+    return sample_rw(node);
+  }
+
   int n2_lower_index =  node * n_node_samples_per_node;
   int n2_upper_index = (node + 1) * n_node_samples_per_node - 1;
   int n2_index = irand(n2_lower_index, n2_upper_index);

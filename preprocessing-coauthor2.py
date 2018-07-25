@@ -66,7 +66,7 @@ samples_per_node = 10000
 experiment_name = 'Coauthor without coauthor-edges Partition {} Node Sampling V1'.format(partition_id)
 
 # define meta-path scoring information
-meta_path_scheme_A = [AUTHOR, WRITTEN_BY, PAPER, WRITTEN_BY, AUTHOR]
+meta_path_scheme_A = [AUTHOR, WRITTEN_BY, PAPER]
 meta_path_scheme_B = [AUTHOR, WRITTEN_BY, PAPER]
 meta_path_scheme_C = [AUTHOR, WRITTEN_BY, PAPER, REFERENCES, PAPER]
 
