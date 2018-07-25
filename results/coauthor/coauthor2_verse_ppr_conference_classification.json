@@ -1,0 +1,978 @@
+{
+    "method": "Verse-PPR",
+    "dataset": "co-author",
+    "parameterizations": [
+        {
+            "params": {
+                "train_size": 0.05
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140516275344440,
+                    "evaluation": {
+                        "micro": 0.6727311643835616,
+                        "macro": 0.6713070293649892
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140516272043848,
+                    "evaluation": {
+                        "micro": 0.6769049657534246,
+                        "macro": 0.6776153844007732
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140516033342264,
+                    "evaluation": {
+                        "micro": 0.6991652397260274,
+                        "macro": 0.6994752977325153
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140516030037800,
+                    "evaluation": {
+                        "micro": 0.6697345890410958,
+                        "macro": 0.669869389378745
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140515927470936,
+                    "evaluation": {
+                        "micro": 0.6747645547945206,
+                        "macro": 0.6743596600087506
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140515854681928,
+                    "evaluation": {
+                        "micro": 0.6913527397260274,
+                        "macro": 0.6910754664801736
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140515851389752,
+                    "evaluation": {
+                        "micro": 0.6820419520547946,
+                        "macro": 0.6815293693702519
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140515847565096,
+                    "evaluation": {
+                        "micro": 0.674443493150685,
+                        "macro": 0.6752181198329854
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140515861848920,
+                    "evaluation": {
+                        "micro": 0.676583904109589,
+                        "macro": 0.6752751060134651
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140515858020168,
+                    "evaluation": {
+                        "micro": 0.6902825342465754,
+                        "macro": 0.6895653707791377
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.1
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140515928141328,
+                    "evaluation": {
+                        "micro": 0.701536375960235,
+                        "macro": 0.6998477310093573
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140515859477056,
+                    "evaluation": {
+                        "micro": 0.6974694984184365,
+                        "macro": 0.6976880660041624
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140515861628464,
+                    "evaluation": {
+                        "micro": 0.692950745594216,
+                        "macro": 0.6918078640105627
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140516277017120,
+                    "evaluation": {
+                        "micro": 0.7005196565747853,
+                        "macro": 0.6998003574525288
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140515859795472,
+                    "evaluation": {
+                        "micro": 0.6964527790329869,
+                        "macro": 0.6961397905895764
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140516277232976,
+                    "evaluation": {
+                        "micro": 0.6903524627202892,
+                        "macro": 0.6903088790732756
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140516319884848,
+                    "evaluation": {
+                        "micro": 0.6895616809760506,
+                        "macro": 0.6888344207952837
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516316072480,
+                    "evaluation": {
+                        "micro": 0.6987121554450971,
+                        "macro": 0.6991136783850045
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140515846987280,
+                    "evaluation": {
+                        "micro": 0.697356529597831,
+                        "macro": 0.6970736257495759
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140515843703360,
+                    "evaluation": {
+                        "micro": 0.6908043380027112,
+                        "macro": 0.6900237488672831
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.15
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140515860966312,
+                    "evaluation": {
+                        "micro": 0.7247607655502393,
+                        "macro": 0.7241909962753352
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140516277431544,
+                    "evaluation": {
+                        "micro": 0.7181818181818181,
+                        "macro": 0.7179835112703072
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140516029485352,
+                    "evaluation": {
+                        "micro": 0.7148325358851675,
+                        "macro": 0.7144880233960468
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140515854808344,
+                    "evaluation": {
+                        "micro": 0.7305023923444977,
+                        "macro": 0.730124189716668
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140516034584360,
+                    "evaluation": {
+                        "micro": 0.7206937799043062,
+                        "macro": 0.7200722956657513
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140515857730808,
+                    "evaluation": {
+                        "micro": 0.7138755980861244,
+                        "macro": 0.7142505512252011
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140516035125544,
+                    "evaluation": {
+                        "micro": 0.7161483253588516,
+                        "macro": 0.715650757469611
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516316083480,
+                    "evaluation": {
+                        "micro": 0.7147129186602871,
+                        "macro": 0.714500652179352
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140515829471496,
+                    "evaluation": {
+                        "micro": 0.7197368421052631,
+                        "macro": 0.7187365599002177
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140515826171128,
+                    "evaluation": {
+                        "micro": 0.7081339712918661,
+                        "macro": 0.7081112641184647
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.2
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140515860957280,
+                    "evaluation": {
+                        "micro": 0.7320793085917641,
+                        "macro": 0.7315634678311513
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140516035618912,
+                    "evaluation": {
+                        "micro": 0.7296644636502287,
+                        "macro": 0.728912604877804
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140516028402712,
+                    "evaluation": {
+                        "micro": 0.7357651245551602,
+                        "macro": 0.7356975987218576
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140515928887368,
+                    "evaluation": {
+                        "micro": 0.7351296390442298,
+                        "macro": 0.7349910578927438
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140515854152760,
+                    "evaluation": {
+                        "micro": 0.7371631926792069,
+                        "macro": 0.7368863135121961
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140515850811152,
+                    "evaluation": {
+                        "micro": 0.728266395526182,
+                        "macro": 0.7282937169681405
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140516274200528,
+                    "evaluation": {
+                        "micro": 0.7304270462633452,
+                        "macro": 0.7299622630193202
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516034510800,
+                    "evaluation": {
+                        "micro": 0.7325876970005084,
+                        "macro": 0.7324282436674006
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140515803550720,
+                    "evaluation": {
+                        "micro": 0.7306812404677174,
+                        "macro": 0.7296712450653484
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140515800254448,
+                    "evaluation": {
+                        "micro": 0.7286476868327401,
+                        "macro": 0.7290198828054437
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.25
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140515928128592,
+                    "evaluation": {
+                        "micro": 0.7386471465365325,
+                        "macro": 0.738781899115882
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140516273689320,
+                    "evaluation": {
+                        "micro": 0.7400027111291853,
+                        "macro": 0.7394849063384974
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140515861878488,
+                    "evaluation": {
+                        "micro": 0.7456960824183272,
+                        "macro": 0.7461886577014315
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140516275387080,
+                    "evaluation": {
+                        "micro": 0.7394604852921242,
+                        "macro": 0.7396576007053598
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140516319630056,
+                    "evaluation": {
+                        "micro": 0.7414938321811033,
+                        "macro": 0.7412798370082327
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140515832603648,
+                    "evaluation": {
+                        "micro": 0.7362071302697574,
+                        "macro": 0.7362177105895945
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140516319364824,
+                    "evaluation": {
+                        "micro": 0.7371560254846143,
+                        "macro": 0.7363717415316811
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516034540152,
+                    "evaluation": {
+                        "micro": 0.7387827029957978,
+                        "macro": 0.7389049046549255
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140515777642168,
+                    "evaluation": {
+                        "micro": 0.7352582350549004,
+                        "macro": 0.734562841321644
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140514928091880,
+                    "evaluation": {
+                        "micro": 0.7324115494103294,
+                        "macro": 0.7325905671922783
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.3
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140516279326088,
+                    "evaluation": {
+                        "micro": 0.7443718228031954,
+                        "macro": 0.7444233732261372
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140516319837656,
+                    "evaluation": {
+                        "micro": 0.7429193899782135,
+                        "macro": 0.742333071829634
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140516030611920,
+                    "evaluation": {
+                        "micro": 0.75279593318809,
+                        "macro": 0.7532327054972532
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140516274165184,
+                    "evaluation": {
+                        "micro": 0.7388525780682643,
+                        "macro": 0.7385703862459663
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140516314560944,
+                    "evaluation": {
+                        "micro": 0.74640522875817,
+                        "macro": 0.7465164022513318
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140516027932344,
+                    "evaluation": {
+                        "micro": 0.7448075526506899,
+                        "macro": 0.7449832217505208
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140515853485728,
+                    "evaluation": {
+                        "micro": 0.7452432824981845,
+                        "macro": 0.7446998971542529
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516319434120,
+                    "evaluation": {
+                        "micro": 0.7453885257806826,
+                        "macro": 0.7451677673259125
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140515776907696,
+                    "evaluation": {
+                        "micro": 0.7429193899782135,
+                        "macro": 0.7426354679151402
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140514902175136,
+                    "evaluation": {
+                        "micro": 0.7471314451706608,
+                        "macro": 0.7481094548415828
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.35
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140516274624440,
+                    "evaluation": {
+                        "micro": 0.748318473330205,
+                        "macro": 0.7485155951270046
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140516272392400,
+                    "evaluation": {
+                        "micro": 0.7506647896136398,
+                        "macro": 0.7503508942035847
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140516033166472,
+                    "evaluation": {
+                        "micro": 0.7509776317847647,
+                        "macro": 0.7513420051896903
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140516034887752,
+                    "evaluation": {
+                        "micro": 0.7436258407633348,
+                        "macro": 0.7434663045649731
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140516274299736,
+                    "evaluation": {
+                        "micro": 0.7459721570467699,
+                        "macro": 0.7458534856724943
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140515778590872,
+                    "evaluation": {
+                        "micro": 0.7480056311590803,
+                        "macro": 0.7481613517336042
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140515857562648,
+                    "evaluation": {
+                        "micro": 0.7481620522446426,
+                        "macro": 0.7475998682179749
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516319662264,
+                    "evaluation": {
+                        "micro": 0.7467542624745815,
+                        "macro": 0.7468462025704063
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140514945406120,
+                    "evaluation": {
+                        "micro": 0.748318473330205,
+                        "macro": 0.7477078346636625
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140514893047960,
+                    "evaluation": {
+                        "micro": 0.7498826841858283,
+                        "macro": 0.7509972835863765
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.4
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140516272255888,
+                    "evaluation": {
+                        "micro": 0.7485172004744959,
+                        "macro": 0.7485953754954393
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140515856286608,
+                    "evaluation": {
+                        "micro": 0.7569903406202338,
+                        "macro": 0.756647821844679
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140516035655552,
+                    "evaluation": {
+                        "micro": 0.7542789357735977,
+                        "macro": 0.7550666793029522
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140515832822640,
+                    "evaluation": {
+                        "micro": 0.7502118285036434,
+                        "macro": 0.749630667200919
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140516271710048,
+                    "evaluation": {
+                        "micro": 0.7486866632774106,
+                        "macro": 0.7488530039598842
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140516035724176,
+                    "evaluation": {
+                        "micro": 0.7503812913065582,
+                        "macro": 0.7502743167071674
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140516028221312,
+                    "evaluation": {
+                        "micro": 0.7503812913065582,
+                        "macro": 0.7498469690687207
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516029152112,
+                    "evaluation": {
+                        "micro": 0.7495339772919845,
+                        "macro": 0.7498034507133411
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140514895609696,
+                    "evaluation": {
+                        "micro": 0.7573292662260633,
+                        "macro": 0.7572173674443069
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140514892321680,
+                    "evaluation": {
+                        "micro": 0.7493645144890696,
+                        "macro": 0.750240585521804
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.45
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140515928341584,
+                    "evaluation": {
+                        "micro": 0.7541589648798521,
+                        "macro": 0.7538652029571076
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140516032691784,
+                    "evaluation": {
+                        "micro": 0.7604436229205176,
+                        "macro": 0.760419972145776
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140516277228152,
+                    "evaluation": {
+                        "micro": 0.7524953789279113,
+                        "macro": 0.7533611639029079
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140515857991160,
+                    "evaluation": {
+                        "micro": 0.7504621072088723,
+                        "macro": 0.7501711288480444
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140515927583320,
+                    "evaluation": {
+                        "micro": 0.7510166358595193,
+                        "macro": 0.7512816053274998
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140515853147720,
+                    "evaluation": {
+                        "micro": 0.7547134935304991,
+                        "macro": 0.7546609671988106
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140515927425656,
+                    "evaluation": {
+                        "micro": 0.7550831792975969,
+                        "macro": 0.754458605733413
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516316157544,
+                    "evaluation": {
+                        "micro": 0.7534195933456561,
+                        "macro": 0.7539808950566501
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140514894879320,
+                    "evaluation": {
+                        "micro": 0.7580406654343809,
+                        "macro": 0.7577064262346641
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140514891583048,
+                    "evaluation": {
+                        "micro": 0.7519408502772644,
+                        "macro": 0.7531499717762091
+                    }
+                }
+            ]
+        },
+        {
+            "params": {
+                "train_size": 0.5
+            },
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "run": 1,
+                    "experiment": 140515777359488,
+                    "evaluation": {
+                        "micro": 0.7596583977226515,
+                        "macro": 0.7593259574117187
+                    }
+                },
+                {
+                    "random_seed": 43,
+                    "run": 2,
+                    "experiment": 140515928975680,
+                    "evaluation": {
+                        "micro": 0.7616917446116307,
+                        "macro": 0.760972477802002
+                    }
+                },
+                {
+                    "random_seed": 44,
+                    "run": 3,
+                    "experiment": 140516035296560,
+                    "evaluation": {
+                        "micro": 0.7511183407889386,
+                        "macro": 0.7515547970719434
+                    }
+                },
+                {
+                    "random_seed": 45,
+                    "run": 4,
+                    "experiment": 140515779899744,
+                    "evaluation": {
+                        "micro": 0.7584383895892639,
+                        "macro": 0.7584586810707672
+                    }
+                },
+                {
+                    "random_seed": 46,
+                    "run": 5,
+                    "experiment": 140515858068816,
+                    "evaluation": {
+                        "micro": 0.7523383489223261,
+                        "macro": 0.7524218550372024
+                    }
+                },
+                {
+                    "random_seed": 47,
+                    "run": 6,
+                    "experiment": 140515857649616,
+                    "evaluation": {
+                        "micro": 0.7562017080113868,
+                        "macro": 0.7564740666240003
+                    }
+                },
+                {
+                    "random_seed": 48,
+                    "run": 7,
+                    "experiment": 140516320529712,
+                    "evaluation": {
+                        "micro": 0.7468483123220822,
+                        "macro": 0.7462372668584611
+                    }
+                },
+                {
+                    "random_seed": 49,
+                    "run": 8,
+                    "experiment": 140516319703392,
+                    "evaluation": {
+                        "micro": 0.7547783651891012,
+                        "macro": 0.7550637970295495
+                    }
+                },
+                {
+                    "random_seed": 50,
+                    "run": 9,
+                    "experiment": 140514894157136,
+                    "evaluation": {
+                        "micro": 0.76372509150061,
+                        "macro": 0.7637110423429185
+                    }
+                },
+                {
+                    "random_seed": 51,
+                    "run": 10,
+                    "experiment": 140514890332480,
+                    "evaluation": {
+                        "micro": 0.7509150061000406,
+                        "macro": 0.751951351737031
+                    }
+                }
+            ]
+        }
+    ],
+    "repetitions": 10,
+    "embedding_file": ""
+}
