@@ -43,13 +43,12 @@ for field_of_study in fields_of_studies:
 	top_5_conf_series_per_field[field_of_study] = coauthor_data[field_of_study]
 
 # define networkx graph
-with open(dataset_path + 'coauthor_networkx.p', 'rb') as pickle_file:
+with open(dataset_path + 'coauthor_without_coauthor_edges_networkx.p', 'rb') as pickle_file:
 	coauthor_graph = pickle.load(pickle_file)
 
 # define node and edge label constants
 AUTHOR = 'author'
 PAPER = 'paper'
-CO_AUTHOR = 'co_author_of'
 REFERENCES = 'references'
 WRITTEN_BY = 'written_by'
 
@@ -64,26 +63,22 @@ print("The avg. node degree is {}".format(np.round(avg_node_degree, decimals=2))
 # define random walk hyper-parameters
 sim_G_sampling = {}
 samples_per_node = 10000
-experiment_name = 'Coauthor Partition {} Node Sampling V1'.format(partition_id)
+experiment_name = 'Coauthor without coauthor-edges Partition {} Node Sampling V1'.format(partition_id)
 
 # define meta-path scoring information
-meta_path_scheme_A = [AUTHOR, CO_AUTHOR, AUTHOR, WRITTEN_BY, PAPER]
-meta_path_scheme_B = [AUTHOR, WRITTEN_BY, PAPER, REFERENCES, PAPER]
-meta_path_scheme_C = [AUTHOR, CO_AUTHOR, AUTHOR]
-meta_path_scheme_D = [AUTHOR, CO_AUTHOR, AUTHOR, CO_AUTHOR, AUTHOR]
-meta_path_scheme_E = [PAPER, REFERENCES, PAPER]
-meta_path_scheme_F = [PAPER, REFERENCES, PAPER, REFERENCES, PAPER]
-meta_path_scheme_G = [PAPER, WRITTEN_BY, AUTHOR, WRITTEN_BY, PAPER]
-meta_path_scheme_H = [PAPER, WRITTEN_BY, AUTHOR, CO_AUTHOR, AUTHOR, WRITTEN_BY, PAPER]
-meta_path_scheme_I = [PAPER, WRITTEN_BY, AUTHOR]
-meta_path_scheme_J = [PAPER, WRITTEN_BY, AUTHOR, CO_AUTHOR, AUTHOR]
-meta_path_scheme_K = [PAPER, REFERENCES, PAPER, WRITTEN_BY, AUTHOR]
-meta_path_scheme_L = [PAPER, REFERENCES, PAPER, WRITTEN_BY, AUTHOR, CO_AUTHOR, AUTHOR]
+meta_path_scheme_A = [AUTHOR, WRITTEN_BY, PAPER, WRITTEN_BY, AUTHOR]
+meta_path_scheme_B = [AUTHOR, WRITTEN_BY, PAPER]
+meta_path_scheme_C = [AUTHOR, WRITTEN_BY, PAPER, REFERENCES, PAPER]
+
+meta_path_scheme_D = [PAPER, REFERENCES, PAPER]
+meta_path_scheme_E = [PAPER, REFERENCES, PAPER, REFERENCES, PAPER]
+meta_path_scheme_F = [PAPER, WRITTEN_BY, AUTHOR, WRITTEN_BY, PAPER]
+meta_path_scheme_G = [PAPER, WRITTEN_BY, AUTHOR]
+meta_path_scheme_H = [PAPER, REFERENCES, PAPER, WRITTEN_BY, AUTHOR]
 
 meta_path_schemes = {
-	AUTHOR: [meta_path_scheme_A, meta_path_scheme_B, meta_path_scheme_C, meta_path_scheme_D],
-	PAPER: [meta_path_scheme_E, meta_path_scheme_F, meta_path_scheme_G, meta_path_scheme_H, meta_path_scheme_I,
-			meta_path_scheme_J, meta_path_scheme_K, meta_path_scheme_L]
+	AUTHOR: [meta_path_scheme_A, meta_path_scheme_B, meta_path_scheme_C],
+	PAPER: [meta_path_scheme_D, meta_path_scheme_E, meta_path_scheme_F, meta_path_scheme_G, meta_path_scheme_H]
 }
 scoring_function = {}
 
@@ -183,16 +178,24 @@ except:
 	print("Failed sending message!")
 
 # load id-to-node mapping of verse embeddings
-id2node_filepath = dataset_path + 'coauthor_mapping_ids_to_nodes.p'
+id2node_filepath = dataset_path + 'coauthor_without_coauthor_edges_mapping_ids_to_nodes.p'
 with open(id2node_filepath, 'rb') as id_2_node_file:
 	id_2_node = pickle.load(id_2_node_file)
 
 # load node-to-id mapping of verse embeddings
-node2id_filepath = dataset_path + 'coauthor_mapping_nodes_to_ids.p'
+node2id_filepath = dataset_path + 'coauthor_without_coauthor_edges_mapping_nodes_to_ids.p'
 with open(node2id_filepath, 'rb') as node_2_id_file:
 	node_2_id = pickle.load(node_2_id_file)
 
 # save dict with node -> similar-nodes-list as pickle file
-export_results_file_path = dataset_path + 'coauthor_sampling_v1_partition_{}.p'.format(partition_id)
+export_results_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_v1_partition_{}.p'.format(partition_id)
 with open(export_results_file_path, 'wb') as pickle_file:
 	pickle.dump(sim_G_sampling, pickle_file)
+
+message = "Finished storing results of {} ".format(experiment_name)
+print(message)
+try:
+	if SEND_NOTIFICATIONS:
+		bot.send_message(chat_id=chat_id, text=message)
+except:
+	print("Failed sending message!")
