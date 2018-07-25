@@ -3,14 +3,18 @@ import pprint
 import numpy as np
 import pickle
 import networkx as nx
-
+from scipy import stats
 from experiment import Experiment
 
 # control runnable experiments
-RUN_VERSE_CLASSIFICATION = False
-RUN_DEEPWALK_CLASSIFICATION = False
-RUN_NODE2VEC_CLASSIFICATION = False
-RUN_HETE_VERSE_CLASSIFICATION = True
+RUN_VERSE_PAPER_CLASSIFICATION = False
+RUN_DEEPWALK_PAPER_CLASSIFICATION = False
+RUN_NODE2VEC_PAPER_CLASSIFICATION = False
+RUN_HETE_VERSE_PAPER_CLASSIFICATION = False
+RUN_VERSE_AUTHOR_CLASSIFICATION = False
+RUN_DEEPWALK_AUTHOR_CLASSIFICATION = False
+RUN_NODE2VEC_AUTHOR_CLASSIFICATION = False
+RUN_HETE_VERSE_AUTHOR_CLASSIFICATION = True
 
 # initialize pretty printer
 pp = pprint.PrettyPrinter(indent=4, depth=8)
@@ -92,14 +96,14 @@ embeddings_file_content = np.fromfile(embeddings_file, dtype=np.float32)
 num_of_nodes = int(np.shape(embeddings_file_content)[0] / n_hidden)
 node2vec_embeddings = embeddings_file_content.reshape((num_of_nodes, n_hidden))
 
-# read *.emb file with precomputed node2vec embeddings
+# read *.emb file with precomputed deepwalk embeddings
 embeddings_file_path = results_path + 'coauthor_deepwalk_embeddings.emb'
 embeddings_file = open(embeddings_file_path, "r")
 embeddings_file_content = np.fromfile(embeddings_file, dtype=np.float32)
 num_of_nodes = int(np.shape(embeddings_file_content)[0] / n_hidden)
 deepwalk_embeddings = embeddings_file_content.reshape((num_of_nodes, n_hidden))
 
-# read *.emb file with precomputed node2vec embeddings
+# read *.emb file with precomputed hete-verse embeddings
 embeddings_file_path = results_path + 'coauthor_hete_verse_embeddings.emb'
 embeddings_file = open(embeddings_file_path, "r")
 embeddings_file_content = np.fromfile(embeddings_file, dtype=np.float32)
@@ -128,7 +132,7 @@ num_of_reps = 10
 random_seeds = list(range(42, 42+num_of_reps))
 train_sizes = [i/20 for i in range(1, num_of_reps+1, 1)]
 
-if RUN_VERSE_CLASSIFICATION:
+if RUN_VERSE_PAPER_CLASSIFICATION:
     # collect paper train data from verse embeddings
     paper_verse_embeddings = []
     paper_labels = []
@@ -150,7 +154,7 @@ if RUN_VERSE_CLASSIFICATION:
     # run experiment wrapper: train, predict and evaluate conference classification on verse-ppr embeddings
     coauthor_verse_ppr_classification_experiment_results = coauthor_verse_ppr_classification_experiment.run()
 
-if RUN_NODE2VEC_CLASSIFICATION:
+if RUN_NODE2VEC_PAPER_CLASSIFICATION:
     # collect paper train data from node2vec embeddings
     paper_node2vec_embeddings = []
     paper_labels = []
@@ -172,7 +176,7 @@ if RUN_NODE2VEC_CLASSIFICATION:
     # run experiment wrapper: train, predict and evaluate conference classification on node2vec embeddings
     coauthor_node2vec_classification_experiment_results = coauthor_node2vec_classification_experiment.run()
 
-if RUN_DEEPWALK_CLASSIFICATION:
+if RUN_DEEPWALK_PAPER_CLASSIFICATION:
     # collect paper train data from deepwalk embeddings
     paper_deepwalk_embeddings = []
     paper_labels = []
@@ -194,7 +198,7 @@ if RUN_DEEPWALK_CLASSIFICATION:
     # run experiment wrapper: train, predict and evaluate conference classification on deepwalk embeddings
     coauthor_deepwalk_classification_experiment_results = coauthor_deepwalk_classification_experiment.run()
 
-if RUN_HETE_VERSE_CLASSIFICATION:
+if RUN_HETE_VERSE_PAPER_CLASSIFICATION:
     # collect paper train data from deepwalk embeddings
     paper_hete_verse_embeddings = []
     paper_labels = []
@@ -218,4 +222,126 @@ if RUN_HETE_VERSE_CLASSIFICATION:
                                                              telegram_config=my_telegram_config)
 
     # run experiment wrapper: train, predict and evaluate conference classification on deepwalk embeddings
+    coauthor_hete_verse_classification_experiment_results = coauthor_hete_verse_classification_experiment.run()
+
+# for all authors, collect all conferences, an autor published in papers
+author_nodes = [node for node, attr in coauthor_graph.nodes(data=True) if attr['label'] == AUTHOR]
+author_conference_labels = {}
+for author in author_nodes:
+    author_conference_labels[author] = []
+    for neighbor in coauthor_graph[author]:
+        if coauthor_graph.nodes[neighbor]['label'] == PAPER:
+            author_conference_labels[author].append(coauthor_graph.nodes[neighbor]['conference'])
+
+# for all authors find conference, they published in most papers
+for author in author_conference_labels.keys():
+    author_conference_labels[author] = stats.mode(author_conference_labels[author]).mode[0]
+    author_conference_labels[author] = conference_label_mapping[author_conference_labels[author]]
+
+if RUN_VERSE_AUTHOR_CLASSIFICATION:
+    # collect author train data from verse-ppr embeddings
+    author_verse_embeddings = []
+    author_labels = []
+    for author in author_nodes:
+        author_index = node2id[author]
+        author_verse_embeddings.append(verse_ppr_embeddings[author_index])
+        author_labels.append(author_conference_labels[author])
+
+    # init classification experiment on verse-ppr embedding
+    results_json_path = results_path + 'coauthor_verse_ppr_author_conference_classification.json'
+    results_pickle_path = results_path + 'coauthor_verse_ppr_author_conference_classification_exp.p'
+    coauthor_verse_ppr_classification_experiment = Experiment(method_name='Verse-PPR', dataset_name='co-author',
+                                                              performance_function='both',
+                                                              node_labels=author_labels, repetitions=num_of_reps,
+                                                              node_embedings=author_verse_embeddings,
+                                                              embedding_dimensionality=n_hidden,
+                                                              experiment_params={'train_size': train_sizes},
+                                                              results_file_path=results_json_path,
+                                                              experiment_type=CLASSIFICATION,
+                                                              random_seeds=random_seeds,
+                                                              pickle_path=results_pickle_path,
+                                                              telegram_config=my_telegram_config)
+
+    # run experiment wrapper: train, predict and evaluate conference classification on verse-ppr embeddings
+    coauthor_verse_ppr_classification_experiment_results = coauthor_verse_ppr_classification_experiment.run()
+
+if RUN_NODE2VEC_AUTHOR_CLASSIFICATION:
+    # collect author train data from node2vec embeddings
+    author_node2vec_embeddings = []
+    author_labels = []
+    for author in author_nodes:
+        author_index = node2id[author]
+        author_node2vec_embeddings.append(node2vec_embeddings[author_index])
+        author_labels.append(author_conference_labels[author])
+
+    # init classification experiment on node2vec embedding
+    results_json_path = results_path + 'coauthor_node2vec_author_conference_classification.json'
+    results_pickle_path = results_path + 'coauthor_node2vec_author_conference_classification_exp.p'
+    coauthor_node2vec_classification_experiment = Experiment(method_name='node2vec', dataset_name='co-author',
+                                                              performance_function='both',
+                                                              node_labels=author_labels, repetitions=num_of_reps,
+                                                              node_embedings=author_node2vec_embeddings,
+                                                              embedding_dimensionality=n_hidden,
+                                                              experiment_params={'train_size': train_sizes},
+                                                              results_file_path=results_json_path,
+                                                              experiment_type=CLASSIFICATION,
+                                                              random_seeds=random_seeds,
+                                                              pickle_path=results_pickle_path,
+                                                              telegram_config=my_telegram_config)
+
+    # run experiment wrapper: train, predict and evaluate conference classification on node2vec embeddings
+    coauthor_node2vec_classification_experiment_results = coauthor_node2vec_classification_experiment.run()
+
+if RUN_DEEPWALK_AUTHOR_CLASSIFICATION:
+    # collect author train data from deepwalk embeddings
+    author_deepwalk_embeddings = []
+    author_labels = []
+    for author in author_nodes:
+        author_index = node2id[author]
+        author_deepwalk_embeddings.append(deepwalk_embeddings[author_index])
+        author_labels.append(author_conference_labels[author])
+
+    # init classification experiment on deepwalk embedding
+    results_json_path = results_path + 'coauthor_deepwalk_author_conference_classification.json'
+    results_pickle_path = results_path + 'coauthor_deepwalk_author_conference_classification_exp.p'
+    coauthor_deepwalk_classification_experiment = Experiment(method_name='deepwalk', dataset_name='co-author',
+                                                              performance_function='both',
+                                                              node_labels=author_labels, repetitions=num_of_reps,
+                                                              node_embedings=author_deepwalk_embeddings,
+                                                              embedding_dimensionality=n_hidden,
+                                                              experiment_params={'train_size': train_sizes},
+                                                              results_file_path=results_json_path,
+                                                              experiment_type=CLASSIFICATION,
+                                                              random_seeds=random_seeds,
+                                                              pickle_path=results_pickle_path,
+                                                              telegram_config=my_telegram_config)
+
+    # run experiment wrapper: train, predict and evaluate conference classification on deepwalk embeddings
+    coauthor_deepwalk_classification_experiment_results = coauthor_deepwalk_classification_experiment.run()
+
+if RUN_HETE_VERSE_AUTHOR_CLASSIFICATION:
+    # collect author train data from hete-verse embeddings
+    author_hete_verse_embeddings = []
+    author_labels = []
+    for author in author_nodes:
+        author_index = node2id[author]
+        author_hete_verse_embeddings.append(hete_verse_embeddings[author_index])
+        author_labels.append(author_conference_labels[author])
+
+    # init classification experiment on hete-verse embedding
+    results_json_path = results_path + 'coauthor_hete_verse_author_conference_classification.json'
+    results_pickle_path = results_path + 'coauthor_hete_verse_author_conference_classification_exp.p'
+    coauthor_hete_verse_classification_experiment = Experiment(method_name='hete-verse', dataset_name='co-author',
+                                                              performance_function='both',
+                                                              node_labels=author_labels, repetitions=num_of_reps,
+                                                              node_embedings=author_hete_verse_embeddings,
+                                                              embedding_dimensionality=n_hidden,
+                                                              experiment_params={'train_size': train_sizes},
+                                                              results_file_path=results_json_path,
+                                                              experiment_type=CLASSIFICATION,
+                                                              random_seeds=random_seeds,
+                                                              pickle_path=results_pickle_path,
+                                                              telegram_config=my_telegram_config)
+
+    # run experiment wrapper: train, predict and evaluate conference classification on hete-verse embeddings
     coauthor_hete_verse_classification_experiment_results = coauthor_hete_verse_classification_experiment.run()
