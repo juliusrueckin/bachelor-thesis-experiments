@@ -136,7 +136,7 @@ inline int sample_rw(int node) {
 }
 
 inline int sample_sim_g(int node) {
-  if(irand(1, 2) > 2){
+  if(irand(1, 2) == 1){
     return sample_rw(node);
   }
 
