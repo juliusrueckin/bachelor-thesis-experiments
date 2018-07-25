@@ -35,3 +35,4 @@ slurm-*.out
 data/net_dbis/dbis_sampling_v1_partition_*.p
 data/coauthor/coauthor_sampling_v1_partition_*.p
 data/coauthor/node_index_samples_coauthor_v1.smp
+data/coauthor/coauthor_without_coauthor_edges_sampling_v1_partition_*.p
