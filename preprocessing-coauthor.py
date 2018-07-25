@@ -64,7 +64,7 @@ print("The avg. node degree is {}".format(np.round(avg_node_degree, decimals=2))
 # define random walk hyper-parameters
 sim_G_sampling = {}
 samples_per_node = 10000
-experiment_name = 'Coauthor Partition {} Node Sampling V1'.format(partition_id)
+experiment_name = 'Coauthor Partition {} Node Sampling V2'.format(partition_id)
 
 # define meta-path scoring information
 meta_path_scheme_A = [AUTHOR, CO_AUTHOR, AUTHOR, WRITTEN_BY, PAPER]
@@ -193,6 +193,6 @@ with open(node2id_filepath, 'rb') as node_2_id_file:
 	node_2_id = pickle.load(node_2_id_file)
 
 # save dict with node -> similar-nodes-list as pickle file
-export_results_file_path = dataset_path + 'coauthor_sampling_v1_partition_{}.p'.format(partition_id)
+export_results_file_path = dataset_path + 'coauthor_sampling_v2_partition_{}.p'.format(partition_id)
 with open(export_results_file_path, 'wb') as pickle_file:
 	pickle.dump(sim_G_sampling, pickle_file)
