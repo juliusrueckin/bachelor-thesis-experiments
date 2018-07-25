@@ -66,19 +66,17 @@ samples_per_node = 10000
 experiment_name = 'Coauthor without coauthor-edges Partition {} Node Sampling V1'.format(partition_id)
 
 # define meta-path scoring information
-meta_path_scheme_A = [AUTHOR, WRITTEN_BY, PAPER]
+meta_path_scheme_A = [AUTHOR, WRITTEN_BY, PAPER, WRITTEN_BY, AUTHOR, WRITTEN_BY, PAPER]
 meta_path_scheme_B = [AUTHOR, WRITTEN_BY, PAPER]
 meta_path_scheme_C = [AUTHOR, WRITTEN_BY, PAPER, REFERENCES, PAPER]
 
 meta_path_scheme_D = [PAPER, REFERENCES, PAPER]
 meta_path_scheme_E = [PAPER, REFERENCES, PAPER, REFERENCES, PAPER]
 meta_path_scheme_F = [PAPER, WRITTEN_BY, AUTHOR, WRITTEN_BY, PAPER]
-meta_path_scheme_G = [PAPER, WRITTEN_BY, AUTHOR]
-meta_path_scheme_H = [PAPER, REFERENCES, PAPER, WRITTEN_BY, AUTHOR]
 
 meta_path_schemes = {
 	AUTHOR: [meta_path_scheme_A, meta_path_scheme_B, meta_path_scheme_C],
-	PAPER: [meta_path_scheme_D, meta_path_scheme_E, meta_path_scheme_F, meta_path_scheme_G, meta_path_scheme_H]
+	PAPER: [meta_path_scheme_D, meta_path_scheme_E, meta_path_scheme_F]
 }
 scoring_function = {}
 
@@ -188,7 +186,7 @@ with open(node2id_filepath, 'rb') as node_2_id_file:
 	node_2_id = pickle.load(node_2_id_file)
 
 # save dict with node -> similar-nodes-list as pickle file
-export_results_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_v1_partition_{}.p'.format(partition_id)
+export_results_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_v2_partition_{}.p'.format(partition_id)
 with open(export_results_file_path, 'wb') as pickle_file:
 	pickle.dump(sim_G_sampling, pickle_file)
 
