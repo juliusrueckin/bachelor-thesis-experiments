@@ -122,6 +122,12 @@ CLASSIFICATION = 'classification'
 MULTI_LABEL_CLASSIFICATION = 'multi_label_classification'
 LINK_PREDICTION = 'link_prediction'
 
+# deine static experiment parameters
+random_seed = 42
+num_of_reps = 10
+random_seeds = list(range(42, 42+num_of_reps))
+train_sizes = [i/20 for i in range(1, num_of_reps+1, 1)]
+
 if RUN_VERSE_CLASSIFICATION:
     # collect paper train data from verse embeddings
     paper_verse_embeddings = []
@@ -132,10 +138,6 @@ if RUN_VERSE_CLASSIFICATION:
         paper_labels.append(paper_conference_labels[paper])
 
     # init classification experiment on verse-ppr embedding
-    random_seed = 42
-    num_of_reps = 10
-    random_seeds = list(range(42, 42+num_of_reps))
-    train_sizes = [i/20 for i in range(1, num_of_reps+1, 1)]
     results_json_path = results_path + 'coauthor_verse_ppr_conference_classification.json'
     results_pickle_path = results_path + 'coauthor_verse_ppr_conference_classification_exp.p'
     coauthor_verse_ppr_classification_experiment = Experiment(method_name='Verse-PPR', dataset_name='co-author', performance_function='both',
