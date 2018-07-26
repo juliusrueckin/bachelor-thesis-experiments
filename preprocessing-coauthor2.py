@@ -20,6 +20,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	partition_id = args.partition_id
+	ppr_alpha = args.ppr_alpha
 	print("Compute node sampling for partition {}".format(partition_id))
 
 print("Construct graph")
