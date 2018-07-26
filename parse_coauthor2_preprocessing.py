@@ -59,7 +59,7 @@ for partition_id in range(num_node_partitions):
 	except:
 		print("Failed sending message!")
 
-	coauthor_partition_sampling_v1_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_v1_partition_{}.p'.format(partition_id)
+	coauthor_partition_sampling_v1_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_v2_partition_{}.p'.format(partition_id)
 	with open(coauthor_partition_sampling_v1_file_path, 'rb') as pickle_file:
 		sim_G_partition_sampling_reload = pickle.load(pickle_file)
 		message = "Length of partition dict: {}\n".format(len(sim_G_partition_sampling_reload.keys()))
