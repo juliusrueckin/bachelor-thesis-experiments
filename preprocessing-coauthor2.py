@@ -9,9 +9,12 @@ from multiprocessing import Pool, cpu_count
 
 
 partition_id = 0
+ppr_alpha = 0.85
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
+	parser.add_argument("--ppr_alpha", required=False, type=float,
+						help="Specify ppr-alpha restart probability", default=0.85)
 	parser.add_argument("--partition_id", required=True, type=int,
 						help="Specify partition id you would like to compute node samples for")
 	args = parser.parse_args()
@@ -63,20 +66,15 @@ print("The avg. node degree is {}".format(np.round(avg_node_degree, decimals=2))
 # define random walk hyper-parameters
 sim_G_sampling = {}
 samples_per_node = 10000
-experiment_name = 'Coauthor without coauthor-edges Partition {} Node Sampling V1'.format(partition_id)
+experiment_name = 'Coauthor without coauthor-edges Partition {} Node Sampling with restart V1'.format(partition_id)
 
 # define meta-path scoring information
-meta_path_scheme_A = [AUTHOR, WRITTEN_BY, PAPER, WRITTEN_BY, AUTHOR, WRITTEN_BY, PAPER]
-meta_path_scheme_B = [AUTHOR, WRITTEN_BY, PAPER]
-meta_path_scheme_C = [AUTHOR, WRITTEN_BY, PAPER, REFERENCES, PAPER]
-
-meta_path_scheme_D = [PAPER, REFERENCES, PAPER]
-meta_path_scheme_E = [PAPER, REFERENCES, PAPER, REFERENCES, PAPER]
-meta_path_scheme_F = [PAPER, WRITTEN_BY, AUTHOR, WRITTEN_BY, PAPER]
+meta_path_scheme_A = [AUTHOR, WRITTEN_BY, PAPER, WRITTEN_BY, AUTHOR]
+meta_path_scheme_B = [PAPER, WRITTEN_BY, AUTHOR, WRITTEN_BY, PAPER]
 
 meta_path_schemes = {
-	AUTHOR: [meta_path_scheme_A, meta_path_scheme_B, meta_path_scheme_C],
-	PAPER: [meta_path_scheme_D, meta_path_scheme_E, meta_path_scheme_F]
+	AUTHOR: [meta_path_scheme_A],
+	PAPER: [meta_path_scheme_B]
 }
 scoring_function = {}
 
@@ -110,9 +108,8 @@ def compute_candidate_set(meta_path_scheme, step, node):
 
 
 # run single random walk with transition probabilities according to scoring function
-def run_single_random_walk(start_node):
+def run_single_random_walk(start_node, meta_path_scheme):
 	current_node = start_node
-	meta_path_scheme = sample_meta_path_scheme(start_node)
 	nodes_in_meta_path = int((len(meta_path_scheme) + 1) / 2)
 
 	for i in range(1, nodes_in_meta_path):
@@ -128,9 +125,13 @@ def run_single_random_walk(start_node):
 # sample 10.000 times a similar node given particular node
 def create_samples_for_node(node):
 	sampled_nodes = []
-
+	meta_path_scheme = sample_meta_path_scheme(node)
 	for i in range(samples_per_node):
-		sampled_nodes.append(run_single_random_walk(node))
+		next_node = node
+		while np.random.sample(1)[0] < ppr_alpha:
+			next_node = run_single_random_walk(next_node, meta_path_scheme)
+
+		sampled_nodes.append(next_node)
 
 	return sampled_nodes
 
@@ -186,7 +187,7 @@ with open(node2id_filepath, 'rb') as node_2_id_file:
 	node_2_id = pickle.load(node_2_id_file)
 
 # save dict with node -> similar-nodes-list as pickle file
-export_results_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_v2_partition_{}.p'.format(partition_id)
+export_results_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_with_restart_v1_partition_{}.p'.format(partition_id)
 with open(export_results_file_path, 'wb') as pickle_file:
 	pickle.dump(sim_G_sampling, pickle_file)
 
