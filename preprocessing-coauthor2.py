@@ -116,11 +116,11 @@ def run_single_random_walk(start_node, meta_path_scheme):
 	for i in range(1, nodes_in_meta_path):
 		candidate_set = compute_candidate_set(meta_path_scheme, i, current_node)
 		if len(candidate_set) == 0:
-			return current_node
+			return current_node, 0
 
 		current_node = np.random.choice(candidate_set)
 
-	return current_node
+	return current_node, 1
 
 
 # sample 10.000 times a similar node given particular node
@@ -130,7 +130,9 @@ def create_samples_for_node(node):
 	for i in range(samples_per_node):
 		next_node = node
 		while np.random.sample(1)[0] < ppr_alpha:
-			next_node = run_single_random_walk(next_node, meta_path_scheme)
+			next_node, has_next_hop = run_single_random_walk(next_node, meta_path_scheme)
+			if not has_next_hop:
+				break
 
 		sampled_nodes.append(next_node)
 
@@ -138,7 +140,7 @@ def create_samples_for_node(node):
 
 
 # sample 10.000 similar nodes for each node in node_list in parallel
-num_node_partitions = 4
+num_node_partitions = 7724
 num_nodes_per_partition = int(coauthor_graph.number_of_nodes() / num_node_partitions)
 
 lower_partition_index = partition_id * num_nodes_per_partition
