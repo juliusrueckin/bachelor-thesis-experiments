@@ -1,0 +1,1075 @@
+{
+    "embedding_file": "",
+    "parameterizations": [
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.24362411823140706,
+                        "silhouette": 0.03728104382753372
+                    },
+                    "run": 1,
+                    "experiment": 140485996289664
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.2570487634033148,
+                        "silhouette": 0.03958389163017273
+                    },
+                    "run": 2,
+                    "experiment": 140485991572200
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.1449027761061335,
+                        "silhouette": 0.05747528374195099
+                    },
+                    "run": 3,
+                    "experiment": 140485988271832
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.14492837880928933,
+                        "silhouette": 0.05745432525873184
+                    },
+                    "run": 4,
+                    "experiment": 140485984451272
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.2552459765567042,
+                        "silhouette": 0.03925101459026337
+                    },
+                    "run": 5,
+                    "experiment": 140485981150904
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.2403816364133542,
+                        "silhouette": 0.036787617951631546
+                    },
+                    "run": 6,
+                    "experiment": 140485973144296
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.14492837880928933,
+                        "silhouette": 0.05745432525873184
+                    },
+                    "run": 7,
+                    "experiment": 140485969839832
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.24038163641335425,
+                        "silhouette": 0.036787617951631546
+                    },
+                    "run": 8,
+                    "experiment": 140485966023368
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.2403816364133542,
+                        "silhouette": 0.036787617951631546
+                    },
+                    "run": 9,
+                    "experiment": 140485962723000
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.2403816364133542,
+                        "silhouette": 0.036787617951631546
+                    },
+                    "run": 10,
+                    "experiment": 140485979366120
+                }
+            ],
+            "params": {
+                "n_clusters": 2
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.21406788732785148,
+                        "silhouette": 0.028140757232904434
+                    },
+                    "run": 1,
+                    "experiment": 140485989743360
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.24045423697727125,
+                        "silhouette": 0.02467828057706356
+                    },
+                    "run": 2,
+                    "experiment": 140485982438960
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.24052620182159987,
+                        "silhouette": 0.024717658758163452
+                    },
+                    "run": 3,
+                    "experiment": 140485993016960
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.24059333855177928,
+                        "silhouette": 0.024704568088054657
+                    },
+                    "run": 4,
+                    "experiment": 140485971903320
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.24018118049748965,
+                        "silhouette": 0.02474673092365265
+                    },
+                    "run": 5,
+                    "experiment": 140485984319304
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.3048108581888888,
+                        "silhouette": 0.029729088768363
+                    },
+                    "run": 6,
+                    "experiment": 140485949369984
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.2141581324263712,
+                        "silhouette": 0.02816878817975521
+                    },
+                    "run": 7,
+                    "experiment": 140485981761320
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.2403225583176437,
+                        "silhouette": 0.02466799132525921
+                    },
+                    "run": 8,
+                    "experiment": 140486002529112
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.24052620182159987,
+                        "silhouette": 0.024717658758163452
+                    },
+                    "run": 9,
+                    "experiment": 140485998970696
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.2142794268474811,
+                        "silhouette": 0.02811715193092823
+                    },
+                    "run": 10,
+                    "experiment": 140485964389176
+                }
+            ],
+            "params": {
+                "n_clusters": 3
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.33951475804108494,
+                        "silhouette": 0.037435710430145264
+                    },
+                    "run": 1,
+                    "experiment": 140485947573472
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.34049292020168037,
+                        "silhouette": 0.02727709524333477
+                    },
+                    "run": 2,
+                    "experiment": 140485997761648
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.33191632613444483,
+                        "silhouette": 0.03530166298151016
+                    },
+                    "run": 3,
+                    "experiment": 140485971396536
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.33171187742433356,
+                        "silhouette": 0.035241201519966125
+                    },
+                    "run": 4,
+                    "experiment": 140485992250280
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.34006013192396406,
+                        "silhouette": 0.03738230839371681
+                    },
+                    "run": 5,
+                    "experiment": 140485982370896
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.340498868497874,
+                        "silhouette": 0.03741716220974922
+                    },
+                    "run": 6,
+                    "experiment": 140485982966056
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.3367114431405357,
+                        "silhouette": 0.03709414601325989
+                    },
+                    "run": 7,
+                    "experiment": 140485967894456
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.33824675472798077,
+                        "silhouette": 0.037030212581157684
+                    },
+                    "run": 8,
+                    "experiment": 140485971954600
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.3431148117947963,
+                        "silhouette": 0.0375455766916275
+                    },
+                    "run": 9,
+                    "experiment": 140485977091992
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.33822826400127864,
+                        "silhouette": 0.03718580678105354
+                    },
+                    "run": 10,
+                    "experiment": 140485944615880
+                }
+            ],
+            "params": {
+                "n_clusters": 4
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.37527018786772975,
+                        "silhouette": 0.04425337165594101
+                    },
+                    "run": 1,
+                    "experiment": 140485990918072
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.3908832117046854,
+                        "silhouette": 0.04199035093188286
+                    },
+                    "run": 2,
+                    "experiment": 140486000664528
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.3720487721872417,
+                        "silhouette": 0.034322116523981094
+                    },
+                    "run": 3,
+                    "experiment": 140485996413000
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.38943378455485933,
+                        "silhouette": 0.04199230298399925
+                    },
+                    "run": 4,
+                    "experiment": 140485986153528
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.3756239164708373,
+                        "silhouette": 0.04424650967121124
+                    },
+                    "run": 5,
+                    "experiment": 140485977339944
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.3910246541403038,
+                        "silhouette": 0.04216437414288521
+                    },
+                    "run": 6,
+                    "experiment": 140485921971224
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.372925742301312,
+                        "silhouette": 0.0342855229973793
+                    },
+                    "run": 7,
+                    "experiment": 140485978036432
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.37147688095917125,
+                        "silhouette": 0.03411249443888664
+                    },
+                    "run": 8,
+                    "experiment": 140485999405208
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.3753016896054067,
+                        "silhouette": 0.04426572471857071
+                    },
+                    "run": 9,
+                    "experiment": 140485947852952
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.3931788859455518,
+                        "silhouette": 0.042107969522476196
+                    },
+                    "run": 10,
+                    "experiment": 140485918698520
+                }
+            ],
+            "params": {
+                "n_clusters": 5
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.4147469937493348,
+                        "silhouette": 0.045047178864479065
+                    },
+                    "run": 1,
+                    "experiment": 140485947563760
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.4148585259460646,
+                        "silhouette": 0.04512982442975044
+                    },
+                    "run": 2,
+                    "experiment": 140485997560552
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.37665212800637565,
+                        "silhouette": 0.04131070896983147
+                    },
+                    "run": 3,
+                    "experiment": 140485987469464
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.4148502119191589,
+                        "silhouette": 0.04509761556982994
+                    },
+                    "run": 4,
+                    "experiment": 140485970103432
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.41340128751895,
+                        "silhouette": 0.045014575123786926
+                    },
+                    "run": 5,
+                    "experiment": 140485974909112
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.4151776494224809,
+                        "silhouette": 0.04505297541618347
+                    },
+                    "run": 6,
+                    "experiment": 140485983650984
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.4140929448606835,
+                        "silhouette": 0.045120783150196075
+                    },
+                    "run": 7,
+                    "experiment": 140485973445824
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.41393840767270473,
+                        "silhouette": 0.045127999037504196
+                    },
+                    "run": 8,
+                    "experiment": 140485950139080
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.4144130634493309,
+                        "silhouette": 0.04510907456278801
+                    },
+                    "run": 9,
+                    "experiment": 140485978529976
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.41429817602526586,
+                        "silhouette": 0.04508734494447708
+                    },
+                    "run": 10,
+                    "experiment": 140485892801704
+                }
+            ],
+            "params": {
+                "n_clusters": 6
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.4008553470149949,
+                        "silhouette": 0.041942838579416275
+                    },
+                    "run": 1,
+                    "experiment": 140485974378200
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.40349346295215255,
+                        "silhouette": 0.0420139878988266
+                    },
+                    "run": 2,
+                    "experiment": 140485997695328
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.40668157674758854,
+                        "silhouette": 0.04713135212659836
+                    },
+                    "run": 3,
+                    "experiment": 140486002184488
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.4043492442738932,
+                        "silhouette": 0.0420030914247036
+                    },
+                    "run": 4,
+                    "experiment": 140486002271512
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.40426341108453046,
+                        "silhouette": 0.0411880761384964
+                    },
+                    "run": 5,
+                    "experiment": 140485949480296
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.401715444106017,
+                        "silhouette": 0.041891515254974365
+                    },
+                    "run": 6,
+                    "experiment": 140485895945464
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.386070497388437,
+                        "silhouette": 0.04056648537516594
+                    },
+                    "run": 7,
+                    "experiment": 140485967936424
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.405288248786407,
+                        "silhouette": 0.04205207899212837
+                    },
+                    "run": 8,
+                    "experiment": 140485977833256
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.4090101828480595,
+                        "silhouette": 0.040550075471401215
+                    },
+                    "run": 9,
+                    "experiment": 140485978908936
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.400549780763323,
+                        "silhouette": 0.04140142351388931
+                    },
+                    "run": 10,
+                    "experiment": 140485892054264
+                }
+            ],
+            "params": {
+                "n_clusters": 7
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.39497911682101017,
+                        "silhouette": 0.03727247938513756
+                    },
+                    "run": 1,
+                    "experiment": 140485948915048
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.39992219484282193,
+                        "silhouette": 0.036835845559835434
+                    },
+                    "run": 2,
+                    "experiment": 140485993629400
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.3869917057059587,
+                        "silhouette": 0.042072661221027374
+                    },
+                    "run": 3,
+                    "experiment": 140485971360120
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.39472586662514353,
+                        "silhouette": 0.03801799565553665
+                    },
+                    "run": 4,
+                    "experiment": 140486001347944
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.3952795865849121,
+                        "silhouette": 0.0451660081744194
+                    },
+                    "run": 5,
+                    "experiment": 140485990363544
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.39522335236341555,
+                        "silhouette": 0.035723425447940826
+                    },
+                    "run": 6,
+                    "experiment": 140485975877000
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.40338083079550185,
+                        "silhouette": 0.038764797151088715
+                    },
+                    "run": 7,
+                    "experiment": 140485978522288
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.39540712155803326,
+                        "silhouette": 0.03840484097599983
+                    },
+                    "run": 8,
+                    "experiment": 140485976288616
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.3947571843450541,
+                        "silhouette": 0.038640160113573074
+                    },
+                    "run": 9,
+                    "experiment": 140485992599960
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.39476087885424055,
+                        "silhouette": 0.03580663725733757
+                    },
+                    "run": 10,
+                    "experiment": 140485890803080
+                }
+            ],
+            "params": {
+                "n_clusters": 8
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.3936579270791958,
+                        "silhouette": 0.04131166264414787
+                    },
+                    "run": 1,
+                    "experiment": 140485999271552
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.393509440987885,
+                        "silhouette": 0.03806205093860626
+                    },
+                    "run": 2,
+                    "experiment": 140485985263344
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.38927572753839396,
+                        "silhouette": 0.04576171562075615
+                    },
+                    "run": 3,
+                    "experiment": 140485993898504
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.3819273892397207,
+                        "silhouette": 0.03605569899082184
+                    },
+                    "run": 4,
+                    "experiment": 140485982262776
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.39128933085319717,
+                        "silhouette": 0.04163685813546181
+                    },
+                    "run": 5,
+                    "experiment": 140485980453352
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.3918760193530745,
+                        "silhouette": 0.041169170290231705
+                    },
+                    "run": 6,
+                    "experiment": 140485988416984
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.3952656009841131,
+                        "silhouette": 0.03645821288228035
+                    },
+                    "run": 7,
+                    "experiment": 140485976396968
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.39555367175932626,
+                        "silhouette": 0.03880753740668297
+                    },
+                    "run": 8,
+                    "experiment": 140485975758328
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.38001987863741515,
+                        "silhouette": 0.041802920401096344
+                    },
+                    "run": 9,
+                    "experiment": 140485989935592
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.39036822509700664,
+                        "silhouette": 0.040554195642471313
+                    },
+                    "run": 10,
+                    "experiment": 140484019678680
+                }
+            ],
+            "params": {
+                "n_clusters": 9
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.39939029350108934,
+                        "silhouette": 0.04550780728459358
+                    },
+                    "run": 1,
+                    "experiment": 140485990917960
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.38283283335588253,
+                        "silhouette": 0.03928833827376366
+                    },
+                    "run": 2,
+                    "experiment": 140485997792336
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.39705532983729713,
+                        "silhouette": 0.04603974521160126
+                    },
+                    "run": 3,
+                    "experiment": 140485989149272
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.3740931648074727,
+                        "silhouette": 0.03984742984175682
+                    },
+                    "run": 4,
+                    "experiment": 140485967187528
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.3859098116167849,
+                        "silhouette": 0.04205592721700668
+                    },
+                    "run": 5,
+                    "experiment": 140485968868632
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.3860504133614889,
+                        "silhouette": 0.040963318198919296
+                    },
+                    "run": 6,
+                    "experiment": 140486002656872
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.3963249586616664,
+                        "silhouette": 0.041189342737197876
+                    },
+                    "run": 7,
+                    "experiment": 140485998606936
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.3860982318487879,
+                        "silhouette": 0.03917431831359863
+                    },
+                    "run": 8,
+                    "experiment": 140485975658056
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.3864834367766473,
+                        "silhouette": 0.0514741949737072
+                    },
+                    "run": 9,
+                    "experiment": 140485893284472
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.3849424881755259,
+                        "silhouette": 0.04016384482383728
+                    },
+                    "run": 10,
+                    "experiment": 140483953100392
+                }
+            ],
+            "params": {
+                "n_clusters": 10
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.38173053141773516,
+                        "silhouette": 0.04903429001569748
+                    },
+                    "run": 1,
+                    "experiment": 140485982207840
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.3873086333870145,
+                        "silhouette": 0.043917614966630936
+                    },
+                    "run": 2,
+                    "experiment": 140485972631624
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.3809364318479214,
+                        "silhouette": 0.04637584835290909
+                    },
+                    "run": 3,
+                    "experiment": 140486003892968
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.36412501183201185,
+                        "silhouette": 0.03794780746102333
+                    },
+                    "run": 4,
+                    "experiment": 140485982955224
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.37301606883521654,
+                        "silhouette": 0.041686948388814926
+                    },
+                    "run": 5,
+                    "experiment": 140485976049928
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.3746945936811913,
+                        "silhouette": 0.03906421363353729
+                    },
+                    "run": 6,
+                    "experiment": 140485895407152
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.3817718802953907,
+                        "silhouette": 0.04561474174261093
+                    },
+                    "run": 7,
+                    "experiment": 140485974581656
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.3832841810376098,
+                        "silhouette": 0.03830079734325409
+                    },
+                    "run": 8,
+                    "experiment": 140485998731048
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.38112233052183947,
+                        "silhouette": 0.05093780905008316
+                    },
+                    "run": 9,
+                    "experiment": 140485891246792
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.39227012381145,
+                        "silhouette": 0.04357178509235382
+                    },
+                    "run": 10,
+                    "experiment": 140483952369336
+                }
+            ],
+            "params": {
+                "n_clusters": 11
+            }
+        },
+        {
+            "runs": [
+                {
+                    "random_seed": 42,
+                    "evaluation": {
+                        "nmi": 0.37879556559588146,
+                        "silhouette": 0.04807431623339653
+                    },
+                    "run": 1,
+                    "experiment": 140485948956968
+                },
+                {
+                    "random_seed": 43,
+                    "evaluation": {
+                        "nmi": 0.3573726894431586,
+                        "silhouette": 0.028386088088154793
+                    },
+                    "run": 2,
+                    "experiment": 140485972325824
+                },
+                {
+                    "random_seed": 44,
+                    "evaluation": {
+                        "nmi": 0.3757969887308076,
+                        "silhouette": 0.0492682047188282
+                    },
+                    "run": 3,
+                    "experiment": 140485973785400
+                },
+                {
+                    "random_seed": 45,
+                    "evaluation": {
+                        "nmi": 0.36254957737879484,
+                        "silhouette": 0.04238737374544144
+                    },
+                    "run": 4,
+                    "experiment": 140485967626024
+                },
+                {
+                    "random_seed": 46,
+                    "evaluation": {
+                        "nmi": 0.3665036199425086,
+                        "silhouette": 0.04523991420865059
+                    },
+                    "run": 5,
+                    "experiment": 140485992981336
+                },
+                {
+                    "random_seed": 47,
+                    "evaluation": {
+                        "nmi": 0.36899362515556205,
+                        "silhouette": 0.03957625478506088
+                    },
+                    "run": 6,
+                    "experiment": 140485988313744
+                },
+                {
+                    "random_seed": 48,
+                    "evaluation": {
+                        "nmi": 0.38887497968921103,
+                        "silhouette": 0.0479302816092968
+                    },
+                    "run": 7,
+                    "experiment": 140485890873048
+                },
+                {
+                    "random_seed": 49,
+                    "evaluation": {
+                        "nmi": 0.38693193541211085,
+                        "silhouette": 0.039819926023483276
+                    },
+                    "run": 8,
+                    "experiment": 140485893896288
+                },
+                {
+                    "random_seed": 50,
+                    "evaluation": {
+                        "nmi": 0.3679061333647903,
+                        "silhouette": 0.050520967692136765
+                    },
+                    "run": 9,
+                    "experiment": 140485892294696
+                },
+                {
+                    "random_seed": 51,
+                    "evaluation": {
+                        "nmi": 0.393848618567907,
+                        "silhouette": 0.04121258482336998
+                    },
+                    "run": 10,
+                    "experiment": 140483951634248
+                }
+            ],
+            "params": {
+                "n_clusters": 12
+            }
+        }
+    ],
+    "method": "node2vec",
+    "repetitions": 10,
+    "dataset": "co-author"
+}
