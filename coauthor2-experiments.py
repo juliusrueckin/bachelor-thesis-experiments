@@ -10,11 +10,11 @@ from experiment import Experiment
 RUN_VERSE_PAPER_CLASSIFICATION = False
 RUN_DEEPWALK_PAPER_CLASSIFICATION = False
 RUN_NODE2VEC_PAPER_CLASSIFICATION = False
-RUN_HETE_VERSE_PAPER_CLASSIFICATION = False
+RUN_HETE_VERSE_PAPER_CLASSIFICATION = True
 RUN_VERSE_AUTHOR_CLASSIFICATION = False
 RUN_DEEPWALK_AUTHOR_CLASSIFICATION = False
 RUN_NODE2VEC_AUTHOR_CLASSIFICATION = False
-RUN_HETE_VERSE_AUTHOR_CLASSIFICATION = True
+RUN_HETE_VERSE_AUTHOR_CLASSIFICATION = False
 
 # initialize pretty printer
 pp = pprint.PrettyPrinter(indent=4, depth=8)
@@ -104,7 +104,7 @@ num_of_nodes = int(np.shape(embeddings_file_content)[0] / n_hidden)
 deepwalk_embeddings = embeddings_file_content.reshape((num_of_nodes, n_hidden))
 
 # read *.emb file with precomputed hete-verse embeddings
-embeddings_file_path = results_path + 'coauthor2_hete_verse_embeddings.emb'
+embeddings_file_path = results_path + 'coauthor2_hete_verse_embeddings_with_restart_v1.emb'
 embeddings_file = open(embeddings_file_path, "r")
 embeddings_file_content = np.fromfile(embeddings_file, dtype=np.float32)
 num_of_nodes = int(np.shape(embeddings_file_content)[0] / n_hidden)
@@ -208,8 +208,8 @@ if RUN_HETE_VERSE_PAPER_CLASSIFICATION:
         paper_labels.append(paper_conference_labels[paper])
 
     # init classification experiment on deepwalk embedding
-    results_json_path = results_path + 'coauthor2_hete_verse_conference_classification.json'
-    results_pickle_path = results_path + 'coauthor2_hete_verse_conference_classification_exp.p'
+    results_json_path = results_path + 'coauthor2_hete_verse_with_restart_85_conference_classification.json'
+    results_pickle_path = results_path + 'coauthor2_hete_verse_with_restart_85_conference_classification_exp.p'
     coauthor_hete_verse_classification_experiment = Experiment(method_name='hete-VERSE', dataset_name='co-author',
                                                              performance_function='both',
                                                              node_labels=paper_labels, repetitions=num_of_reps,

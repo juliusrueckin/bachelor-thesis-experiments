@@ -188,7 +188,7 @@ with open(node2id_filepath, 'rb') as node_2_id_file:
 	node_2_id = pickle.load(node_2_id_file)
 
 # save dict with node -> similar-nodes-list as pickle file
-export_results_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_with_restart_v1_partition_{}.p'.format(partition_id)
+export_results_file_path = dataset_path + 'coauthor_without_coauthor_edges_sampling_with_restart_75_v1_partition_{}.p'.format(partition_id)
 with open(export_results_file_path, 'wb') as pickle_file:
 	pickle.dump(sim_G_sampling, pickle_file)
 
