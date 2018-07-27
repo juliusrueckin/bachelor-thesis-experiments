@@ -42,7 +42,8 @@ class Clustering(Benchmark):
         self.node2id_filepath = node2id_filepath
 
     def preprocess_data(self, random_seed=None):
-        self.convert_node_labels()
+        if self.node2id_filepath is not None:
+            self.convert_node_labels()
         return self.embeddings, self.node_labels, self.embeddings, self.node_labels
 
     def convert_node_labels(self):

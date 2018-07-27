@@ -10,11 +10,16 @@ from experiment import Experiment
 RUN_VERSE_PAPER_CLASSIFICATION = False
 RUN_DEEPWALK_PAPER_CLASSIFICATION = False
 RUN_NODE2VEC_PAPER_CLASSIFICATION = False
-RUN_HETE_VERSE_PAPER_CLASSIFICATION = True
+RUN_HETE_VERSE_PAPER_CLASSIFICATION = False
 RUN_VERSE_AUTHOR_CLASSIFICATION = False
 RUN_DEEPWALK_AUTHOR_CLASSIFICATION = False
 RUN_NODE2VEC_AUTHOR_CLASSIFICATION = False
 RUN_HETE_VERSE_AUTHOR_CLASSIFICATION = False
+
+RUN_VERSE_PAPER_CLUSTERING = True
+RUN_DEEPWALK_PAPER_CLUSTERING = True
+RUN_NODE2VEC_PAPER_CLUSTERING = True
+RUN_HETE_VERSE_PAPER_CLUSTERING = True
 
 # initialize pretty printer
 pp = pprint.PrettyPrinter(indent=4, depth=8)
@@ -104,7 +109,7 @@ num_of_nodes = int(np.shape(embeddings_file_content)[0] / n_hidden)
 deepwalk_embeddings = embeddings_file_content.reshape((num_of_nodes, n_hidden))
 
 # read *.emb file with precomputed hete-verse embeddings
-embeddings_file_path = results_path + 'coauthor2_hete_verse_embeddings_with_restart_v1.emb'
+embeddings_file_path = results_path + 'coauthor2_hete_verse_embeddings.emb'
 embeddings_file = open(embeddings_file_path, "r")
 embeddings_file_content = np.fromfile(embeddings_file, dtype=np.float32)
 num_of_nodes = int(np.shape(embeddings_file_content)[0] / n_hidden)
@@ -345,3 +350,108 @@ if RUN_HETE_VERSE_AUTHOR_CLASSIFICATION:
 
     # run experiment wrapper: train, predict and evaluate conference classification on hete-verse embeddings
     coauthor_hete_verse_classification_experiment_results = coauthor_hete_verse_classification_experiment.run()
+
+n_clusters = list(range(2, 13))
+
+if RUN_VERSE_PAPER_CLUSTERING:
+    # collect paper train data from verse embeddings
+    paper_verse_embeddings = []
+    paper_labels = []
+    for paper in paper_nodes:
+        paper_index = node2id[paper]
+        paper_verse_embeddings.append(verse_ppr_embeddings[paper_index])
+        paper_labels.append(paper_conference_labels[paper])
+
+    # init clustering experiment on verse-ppr embedding
+    results_json_path = results_path + 'coauthor2_verse_ppr_conference_clustering.json'
+    results_pickle_path = results_path + 'coauthor2_verse_ppr_conference_clustering_exp.p'
+    coauthor_verse_ppr_clustering_experiment = Experiment(method_name='Verse-PPR', dataset_name='co-author',
+                                                          performance_function='both',
+                                                          node_labels=paper_labels, repetitions=num_of_reps,
+                                                          node_embedings=paper_verse_embeddings,
+                                                          embedding_dimensionality=n_hidden,
+                                                          experiment_params={'n_clusters': n_clusters},
+                                                          results_file_path=results_json_path,
+                                                          experiment_type=CLUSTERING,
+                                                          random_seeds=random_seeds,
+                                                          pickle_path=results_pickle_path,
+                                                          telegram_config=my_telegram_config)
+
+    # run experiment wrapper: train, predict and evaluate conference clustering on verse-ppr embeddings
+    coauthor_verse_ppr_clustering_experiment_results = coauthor_verse_ppr_clustering_experiment.run()
+
+if RUN_NODE2VEC_PAPER_CLUSTERING:
+    # collect paper train data from node2vec embeddings
+    paper_node2vec_embeddings = []
+    paper_labels = []
+    for paper in paper_nodes:
+        paper_index = node2id[paper]
+        paper_node2vec_embeddings.append(node2vec_embeddings[paper_index])
+        paper_labels.append(paper_conference_labels[paper])
+
+    # init clustering experiment on node2vec embedding
+    results_json_path = results_path + 'coauthor2_node2vec_conference_clustering.json'
+    results_pickle_path = results_path + 'coauthor2_node2vec_conference_clustering_exp.p'
+    coauthor_node2vec_clustering_experiment = Experiment(method_name='node2vec', dataset_name='co-author',
+                                                         performance_function='both',node_labels=paper_labels,
+                                                         repetitions=num_of_reps, experiment_type=CLUSTERING,
+                                                         node_embedings=paper_node2vec_embeddings,
+                                                         embedding_dimensionality=n_hidden,
+                                                         experiment_params={'n_clusters': n_clusters},
+                                                         results_file_path=results_json_path,
+                                                         random_seeds=random_seeds,
+                                                         pickle_path=results_pickle_path,
+                                                         telegram_config=my_telegram_config)
+
+    # run experiment wrapper: train, predict and evaluate conference clustering on node2vec embeddings
+    coauthor_node2vec_clustering_experiment_results = coauthor_node2vec_clustering_experiment.run()
+
+if RUN_DEEPWALK_PAPER_CLUSTERING:
+    # collect paper train data from deepwalk embeddings
+    paper_deepwalk_embeddings = []
+    paper_labels = []
+    for paper in paper_nodes:
+        paper_index = node2id[paper]
+        paper_deepwalk_embeddings.append(deepwalk_embeddings[paper_index])
+        paper_labels.append(paper_conference_labels[paper])
+
+    # init clustering experiment on deepwalk embedding
+    results_json_path = results_path + 'coauthor2_deepwalk_conference_clustering.json'
+    results_pickle_path = results_path + 'coauthor2_deepwalk_conference_clustering_exp.p'
+    coauthor_deepwalk_clustering_experiment = Experiment(method_name='deepwalk', dataset_name='co-author',
+                                                         performance_function='both', node_labels=paper_labels,
+                                                         repetitions=num_of_reps, embedding_dimensionality=n_hidden,
+                                                         node_embedings=paper_deepwalk_embeddings,
+                                                         experiment_params={'n_clusters': n_clusters},
+                                                         results_file_path=results_json_path,
+                                                         experiment_type=CLUSTERING, random_seeds=random_seeds,
+                                                         pickle_path=results_pickle_path,
+                                                         telegram_config=my_telegram_config)
+
+    # run experiment wrapper: train, predict and evaluate conference clustering on deepwalk embeddings
+    coauthor_deepwalk_clustering_experiment_results = coauthor_deepwalk_clustering_experiment.run()
+
+if RUN_HETE_VERSE_PAPER_CLUSTERING:
+    # collect paper train data from deepwalk embeddings
+    paper_hete_verse_embeddings = []
+    paper_labels = []
+    for paper in paper_nodes:
+        paper_index = node2id[paper]
+        paper_hete_verse_embeddings.append(hete_verse_embeddings[paper_index])
+        paper_labels.append(paper_conference_labels[paper])
+
+    # init clustering experiment on deepwalk embedding
+    results_json_path = results_path + 'coauthor2_hete_verse_conference_clustering.json'
+    results_pickle_path = results_path + 'coauthor2_hete_verse_conference_clustering_exp.p'
+    coauthor_hete_verse_clustering_experiment = Experiment(method_name='hete-VERSE', dataset_name='co-author',
+                                                           performance_function='both', node_labels=paper_labels,
+                                                           repetitions=num_of_reps, random_seeds=random_seeds,
+                                                           node_embedings=paper_hete_verse_embeddings,
+                                                           embedding_dimensionality=n_hidden,
+                                                           experiment_params={'n_clusters': n_clusters},
+                                                           results_file_path=results_json_path,
+                                                           experiment_type=CLUSTERING, pickle_path=results_pickle_path,
+                                                           telegram_config=my_telegram_config)
+
+    # run experiment wrapper: train, predict and evaluate conference clustering on hete-verse embeddings
+    coauthor_hete_verse_clustering_experiment_results = coauthor_hete_verse_clustering_experiment.run()
